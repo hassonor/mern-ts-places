@@ -1,6 +1,7 @@
 import React from 'react';
 import MainHeader from "./MainHeader.tsx";
 import { Link } from "react-router-dom";
+import NavLinks from "./NavLinks.tsx";
 
 
 const MainNavigation = props => {
@@ -16,7 +17,7 @@ const MainNavigation = props => {
                 <Link to="/" className="no-underline text-white font-bold">ISRAEL</Link>
             </h1>
             <nav className="hidden lg:block">
-                {/* Your nav items */}
+                <NavLinks/>
             </nav>
         </MainHeader>
     )

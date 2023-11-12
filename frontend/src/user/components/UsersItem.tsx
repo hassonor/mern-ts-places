@@ -18,7 +18,7 @@ const UserItem: FC<UserItemProps> = ({user}): ReactElement => {
                         <Avatar image={user.image} alt={user.name} width="16" height="16"/>
                     </div>
                     <div>
-                        <h2 className="text-2xl m-0 font-normal text-gray-100  hover:text-gray-800 active:text-gray-800">{user.name}</h2>
+                        <h2 className="text-2xl m-0 font-normal text-orange-500  hover:text-gray-800 active:text-gray-800">{user.name}</h2>
                         <h3 className="m-0">
                             {user.placeCount} {user.placeCount === 1 ? 'Place' : 'Places'}
                         </h3>

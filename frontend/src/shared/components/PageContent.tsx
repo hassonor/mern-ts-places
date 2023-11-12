@@ -1,5 +1,4 @@
 import { FC, ReactElement, ReactNode } from "react";
-import classes from "./PageContent.module.css";
 
 interface PageContentProps {
     title: string;
@@ -8,7 +7,7 @@ interface PageContentProps {
 
 const PageContent: FC<PageContentProps> = ({title, children}): ReactElement => {
     return (
-        <div className={classes.content}>
+        <div className="text-center">
             <h1>{title}</h1>
             {children}
         </div>

@@ -2,8 +2,9 @@ import { ReactElement } from "react";
 import { createBrowserRouter, RouterProvider,Navigate } from 'react-router-dom';
 import RootLayout from "./shared/components/Root.tsx";
 import Error404 from "./shared/pages/Error404.tsx";
-import UserPage from "./user/pages/Users.tsx";
+
 import NewPlaces from "./places/pages/NewPlaces.tsx";
+import UsersPage from "./user/pages/Users.tsx";
 
 const router = createBrowserRouter([
     {
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <UserPage />
+                element: <UsersPage />
             },
             {
                 path: 'places/new',

@@ -1,11 +1,13 @@
 import { FC, ReactElement } from "react";
 import { Outlet } from 'react-router-dom';
+import MainNavigation from "./Navigation/MainNavigation.tsx";
 
 
 const RootLayout: FC = (): ReactElement => {
     return (
         <>
-            <main>
+            <MainNavigation/>
+            <main className="pt-[5rem]">
                 <Outlet/>
             </main>
         </>

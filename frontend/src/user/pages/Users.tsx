@@ -9,7 +9,7 @@ const DUMMY_USERS: TUser[] = [
 const UsersPage: FC = (): ReactElement => {
 
     return (
-        <div>
+        <div className="flex justify-center">
             <UsersList items={DUMMY_USERS}/>
         </div>
     )

@@ -1,6 +1,7 @@
 import { FC, ReactElement } from "react";
 import UserItem from "./UsersItem.tsx";
 import { TUser } from "../../types/types.ts";
+import Card from "../../shared/components/UIElements/Card.tsx";
 
 interface UsersListProps {
     items: TUser[];
@@ -9,9 +10,11 @@ interface UsersListProps {
 const UsersList: FC<UsersListProps> = ({items}): ReactElement => {
     if (items.length === 0) {
         return (
-            <div className="flex justify-center">
-                <h2>No Users found.</h2>
-            </div>
+            <Card>
+                <div className="flex justify-center">
+                    <h2>No Users found.</h2>
+                </div>
+            </Card>
         )
     }
     return (

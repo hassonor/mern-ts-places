@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { TPlace } from "../../types/types.ts";
 import Card from "../../shared/components/UIElements/Card.tsx";
 import PlaceItem from "./PlaceItem.tsx";
@@ -7,7 +6,7 @@ interface PlaceListProps {
     items: TPlace[];
 }
 
-const PlaceList = ({items}) => {
+const PlaceList: FC<PlaceListProps> = ({items}) => {
     if (items.length === 0) {
         return (
             <div className="mx-auto p-0 w-9/10 max-w-xl">
@@ -26,3 +25,5 @@ const PlaceList = ({items}) => {
         </ul>
     );
 };
+
+export default PlaceList;

@@ -1,7 +1,7 @@
-import React from 'react';
+import { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 
-const NavLinks = () => {
+const NavLinks: FC = () => {
     return (
         <ul className="list-none m-0 p-0 w-full h-full flex flex-col justify-center items-center lg:flex-row">
             <li className="m-4 lg:mx-2">

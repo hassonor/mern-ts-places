@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useReducer } from "react";
+import { ChangeEvent, FC, useReducer, useEffect } from "react";
 import { validate, Validator } from "../../utils/validators.ts";
 
 type InputProps = {
@@ -9,7 +9,7 @@ type InputProps = {
     rows?: number;
     label?: string;
     errorText?: string;
-    onInput?: () => void;
+    onInput: () => void;
     validators?: Validator[];
 };
 
@@ -36,6 +36,15 @@ const Input: FC<InputProps> = (props) => {
         isTouched: false,
         isValid: false
     })
+
+    const {id, onInput} = props;
+    const {value, isValid} = inputState;
+
+    useEffect(() => {
+        onInput(id, value, isValid);
+    }, [id, value, isValid, onInput])
+
+
     const changeHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         dispatch({type: 'CHANGE', val: event.target.value, validators: props.validators});
     }
@@ -60,7 +69,7 @@ const Input: FC<InputProps> = (props) => {
         ) : (
             <textarea
                 id={props.id}
-                className={`block w-full bg-gray-100 border border-gray-300 p-1 ${!inputState.isValid && inputState.isTouched && 'border-red-500 bg-red-100'}`}
+                className={`block w-full bg-gray-100 border border-gray-300 p-1 ${!inputState.isValid && inputState.isTouched && 'border-red-500 bg-red-200'}`}
                 rows={props.rows || 3}
                 onChange={changeHandler}
                 onBlur={touchHandler}

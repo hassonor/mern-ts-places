@@ -1,20 +1,33 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import MainHeader from "./MainHeader.tsx";
 import { Link } from "react-router-dom";
 import NavLinks from "./NavLinks.tsx";
 import SideDrawer from "./SideDrawer.tsx";
+import Backdrop from "../UIElements/Backdrop.tsx";
 
 
 const MainNavigation: FC = () => {
+    const [drawIsOpen, setDrawIsOpen] = useState<boolean>(false);
+
+    const openDrawer = () => {
+        setDrawIsOpen(true);
+    }
+
+    const closeDrawer = () => {
+        setDrawIsOpen(false);
+    }
     return (
         <>
-            <SideDrawer>
-                <nav className="h-full">
-                    <NavLinks/>
-                </nav>
-            </SideDrawer>
+            {drawIsOpen && <Backdrop onClick={closeDrawer}/>}
+            {drawIsOpen && (
+                <SideDrawer>
+                    <nav className="h-full">
+                        <NavLinks/>
+                    </nav>
+                </SideDrawer>)}
             <MainHeader>
                 <button
+                    onClick={openDrawer}
                     className="w-12 h-12 bg-transparent border-none flex flex-col justify-around mr-8 cursor-pointer lg:hidden">
                     <span className="block w-12 h-0.5 bg-white"/>
                     <span className="block w-12 h-0.5 bg-white"/>

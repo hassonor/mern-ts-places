@@ -27,7 +27,7 @@ const Modal = forwardRef<ModalHandles, ModalProps>(({title, footer, children}, r
             if (closeTimeout.current) {
                 clearTimeout(closeTimeout.current);
             }
-            closeTimeout.current = setTimeout(() => dialog.current?.close(), 100); // Wait for animation to complete
+            closeTimeout.current = setTimeout(() => dialog.current?.close(), 100);
         },
     }));
 

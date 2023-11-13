@@ -19,8 +19,8 @@ export default {
                 }
             },
             animation: {
-                blowUpIn: 'blowUpModal 0.5s ease-out forwards',
-                blowUpOut: 'blowUpModalOut 0.5s ease-out forwards',
+                blowUpIn: 'blowUpModal 0.2s ease-out forwards',
+                blowUpOut: 'blowUpModalOut 0.2s ease-out forwards',
             },
         },
     },

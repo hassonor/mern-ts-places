@@ -49,11 +49,12 @@ const Modal = forwardRef<ModalHandles, ModalProps>(({title, footer, children}, r
     }
 
     return createPortal(
-        <dialog ref={dialog} className={`fixed inset-0 m-auto bg-white shadow-lg rounded-lg ${modalAnimationClass}`}>
+        <dialog ref={dialog}
+                className={`fixed inset-0 m-auto bg-white shadow-lg z-auto rounded-lg ${modalAnimationClass}`}>
             <header className="py-4 px-2 bg-[#2a006e] text-white">
                 <div className="m-2">{title}</div>
             </header>
-            <div className="py-4 px-2">
+            <div className="py-14 px-2">
                 {children}
             </div>
             <footer className="py-4 px-2 flex justify-end">

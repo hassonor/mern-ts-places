@@ -10,8 +10,8 @@ const DUMMY_PLACES: TPlace[] = [{
     creator: 'u2',
     address: 'QPV8+C97, Lukla - Everest Base Camp Trekking Route, Namche 56000, Nepal',
     location: {
-        lat: 27.7935331,
-        lng: 86.7159345
+        lat: 32.0700352,
+        lng: 34.7916835
     }
 },
     {
@@ -22,8 +22,8 @@ const DUMMY_PLACES: TPlace[] = [{
         creator: 'u1',
         address: 'QPV8+C97, Lukla - Everest Base Camp Trekking Route, Namche 56000, Nepal',
         location: {
-            lat: 27.7935331,
-            lng: 86.7159345
+            lat: 32.0700352,
+            lng: 34.7916835
         }
     }];
 

@@ -3,6 +3,7 @@ import { TPlace } from "../../types/types";
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal, { ModalHandles } from "../../shared/components/UIElements/Modal";
+import GoogleMap from "../../shared/components/UIElements/GoogleMap.tsx";
 
 interface PlaceItemProps {
     place: TPlace;
@@ -26,8 +27,8 @@ const PlaceItem: FC<PlaceItemProps> = ({place}) => {
                 title={<h2 className="font-extrabold text-lg">{place.address}</h2>}
                 footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
             >
-                <div className="h-60 w-full">
-                    <h2 className="font-extrabold text-lg">THE MAP!</h2>
+                <div className="h-80 w-full">
+                    <GoogleMap center={place.location} zoom={16}/>
                 </div>
             </Modal>
             <li className="my-4">

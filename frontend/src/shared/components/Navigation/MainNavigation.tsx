@@ -19,12 +19,11 @@ const MainNavigation: FC = () => {
     return (
         <>
             {drawIsOpen && <Backdrop onClick={closeDrawer}/>}
-            {drawIsOpen && (
-                <SideDrawer>
-                    <nav className="h-full">
-                        <NavLinks/>
-                    </nav>
-                </SideDrawer>)}
+            <SideDrawer show={drawIsOpen} onClick={closeDrawer}>
+                <nav className="h-full">
+                    <NavLinks/>
+                </nav>
+            </SideDrawer>
             <MainHeader>
                 <button
                     onClick={openDrawer}

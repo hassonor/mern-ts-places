@@ -15,7 +15,7 @@ const UserItem: FC<UserItemProps> = ({user}): ReactElement => {
                 <Link to={`/${user.id}/places`}
                       className="flex items-center w-full h-full text-white bg-gray-800 p-4 no-underline hover:bg-yellow-400 active:bg-yellow-400">
                     <div className="w-16 h-16 mr-6">
-                        <Avatar image={user.image} alt={user.name} width="16" height="16"/>
+                        <Avatar image={user.imageUrl} alt={user.name} width="16" height="16"/>
                     </div>
                     <div>
                         <h2 className="text-2xl m-0 font-normal text-red-500  hover:text-gray-800 active:text-gray-800">{user.name}</h2>

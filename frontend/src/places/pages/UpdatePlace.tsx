@@ -5,6 +5,7 @@ import Input from "../../shared/components/FormElements/Input.tsx";
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/utils/validators.ts";
 import Button from "../../shared/components/FormElements/Button.tsx";
 import { useForm } from "../../shared/hooks/form-hook.ts";
+import Card from "../../shared/components/UIElements/Card.tsx";
 
 const UpdatePlace: FC = () => {
     const placeId = useParams().placeId;
@@ -47,7 +48,9 @@ const UpdatePlace: FC = () => {
     if (!identifiedPlace) {
         return (
             <div className="text-center flex justify-center items-center">
-                <h2> Could not find place.</h2>
+                <Card className="text-center py-8 px-4">
+                    <h2 className="text-lg font-semibold mb-4"> Could not find place.</h2>
+                </Card>
             </div>
         )
     }

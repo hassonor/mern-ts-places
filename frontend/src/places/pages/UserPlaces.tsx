@@ -7,7 +7,7 @@ export const DUMMY_PLACES: TPlace[] = [{
     id: 'p1', title: 'My first place',
     description: 'This is my first place',
     imageUrl: 'https://triptins.com/wp-content/uploads/2020/10/Views-of-Mount-Everest.jpeg',
-    creator: 'u2',
+    creator: 'u1',
     address: 'QPV8+C97, Lukla - Everest Base Camp Trekking Route, Namche 56000, Nepal',
     location: {
         lat: 32.0700352,

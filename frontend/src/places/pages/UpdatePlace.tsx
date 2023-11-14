@@ -18,7 +18,7 @@ const UpdatePlace: FC = () => {
         )
     }
 
-    return (<form>
+    return (<form className="list-none m-auto p-4 w-11/12 max-w-xl shadow-md rounded-md bg-white">
         <Input
             id="title"
             element="input"

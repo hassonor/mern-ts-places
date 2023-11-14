@@ -29,7 +29,7 @@ const formReducer = (state, action) => {
     }
 }
 
-const NewPlaces: FC = (): ReactElement => {
+const NewPlace: FC = (): ReactElement => {
     const [formState, dispatch] = useReducer(formReducer, {
         inputs: {
             title: {
@@ -37,6 +37,10 @@ const NewPlaces: FC = (): ReactElement => {
                 isValid: false
             },
             description: {
+                value: '',
+                isValid: false
+            },
+            address: {
                 value: '',
                 isValid: false
             }
@@ -72,4 +76,4 @@ const NewPlaces: FC = (): ReactElement => {
     )
 }
 
-export default NewPlaces;
+export default NewPlace;

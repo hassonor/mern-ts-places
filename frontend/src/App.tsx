@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import RootLayout from "./shared/components/Root.tsx";
 import Error404 from "./shared/pages/Error404.tsx";
 
-import NewPlaces from "./places/pages/NewPlaces.tsx";
+import NewPlace from "./places/pages/NewPlace.tsx";
 import UsersPage from "./user/pages/Users.tsx";
 import UserPlaces from "./places/pages/UserPlaces.tsx";
 import UpdatePlace from "./places/pages/UpdatePlace.tsx";
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
             },
             {
                 path: 'places/new',
-                element: <NewPlaces/>
+                element: <NewPlace/>
             },
             {
                 path: 'places/:placeId',

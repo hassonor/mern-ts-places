@@ -7,6 +7,7 @@ import NewPlace from "./places/pages/NewPlace.tsx";
 import UsersPage from "./user/pages/Users.tsx";
 import UserPlaces from "./places/pages/UserPlaces.tsx";
 import UpdatePlace from "./places/pages/UpdatePlace.tsx";
+import Auth from "./user/pages/Auth.tsx";
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
             {
                 path: ':userId/places',
                 element: <UserPlaces/>
+            },
+            {
+                path: 'auth',
+                element: <Auth/>
             },
             {
                 path: 'places/new',

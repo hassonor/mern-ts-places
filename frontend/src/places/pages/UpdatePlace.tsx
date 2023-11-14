@@ -1,4 +1,4 @@
-import { FC, FormEvent } from "react";
+import { FC, FormEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { DUMMY_PLACES } from "./UserPlaces.tsx";
 import Input from "../../shared/components/FormElements/Input.tsx";
@@ -8,19 +8,36 @@ import { useForm } from "../../shared/hooks/form-hook.ts";
 
 const UpdatePlace: FC = () => {
     const placeId = useParams().placeId;
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [formState, inputHandler, setFormData] = useForm({
+        title: {
+            value: '',
+            isValid: false
+        },
+        description: {
+            value: '',
+            isValid: false
+        }
+    }, true);
 
     const identifiedPlace = DUMMY_PLACES.find(p => p.id === placeId);
 
-    const [formState, inputHandler] = useForm({
-        title: {
-            value: identifiedPlace.title,
-            isValid: true
-        },
-        description: {
-            value: identifiedPlace.description,
-            isValid: true
+    useEffect(() => {
+        if (identifiedPlace) {
+            setFormData({
+                title: {
+                    value: identifiedPlace.title,
+                    isValid: true
+                },
+                description: {
+                    value: identifiedPlace.description,
+                    isValid: true
+                }
+            }, true)
+            setIsLoading(false);
         }
-    }, true);
+    }, [setFormData, identifiedPlace])
 
     const addPlaceSubmitHandler = (event: FormEvent) => {
         event.preventDefault();
@@ -31,6 +48,17 @@ const UpdatePlace: FC = () => {
         return (
             <div className="text-center flex justify-center items-center">
                 <h2> Could not find place.</h2>
+            </div>
+        )
+    }
+
+    /*
+     * Temporarily, till we will have
+     */
+    if (isLoading) {
+        return (
+            <div className="text-center flex justify-center items-center">
+                <h2> Loading...</h2>
             </div>
         )
     }

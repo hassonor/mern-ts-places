@@ -11,9 +11,11 @@ type InputProps = {
     errorText?: string;
     onInput: () => void;
     validators?: Validator[];
+    initialValue?: string;
+    initialValid?: boolean;
 };
 
-const inputReducer = (state: any, action: any) => {
+const inputReducer = (state, action) => {
     switch (action.type) {
         case 'CHANGE':
             return {
@@ -32,9 +34,9 @@ const inputReducer = (state: any, action: any) => {
 
 const Input: FC<InputProps> = (props) => {
     const [inputState, dispatch] = useReducer(inputReducer, {
-        value: props.value || '',
+        value: props.initialValue || '',
         isTouched: false,
-        isValid: props.valid || false
+        isValid: props.initialValid || false
     })
 
     const {id, onInput} = props;

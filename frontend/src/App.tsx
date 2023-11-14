@@ -6,6 +6,7 @@ import Error404 from "./shared/pages/Error404.tsx";
 import NewPlaces from "./places/pages/NewPlaces.tsx";
 import UsersPage from "./user/pages/Users.tsx";
 import UserPlaces from "./places/pages/UserPlaces.tsx";
+import UpdatePlace from "./places/pages/UpdatePlace.tsx";
 
 const router = createBrowserRouter([
     {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
             {
                 path: 'places/new',
                 element: <NewPlaces/>
+            },
+            {
+                path: 'places/:placeId',
+                element: <UpdatePlace/>
             }
         ]
     },

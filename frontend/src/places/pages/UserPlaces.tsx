@@ -3,7 +3,7 @@ import { TPlace } from "../../types/types.ts";
 import PlaceList from "../components/PlaceList.tsx";
 import { useParams } from "react-router-dom";
 
-const DUMMY_PLACES: TPlace[] = [{
+export const DUMMY_PLACES: TPlace[] = [{
     id: 'p1', title: 'My first place',
     description: 'This is my first place',
     imageUrl: 'https://triptins.com/wp-content/uploads/2020/10/Views-of-Mount-Everest.jpeg',

@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { Get } from '@place/controllers/getPlaces.controller';
+import { Get } from '@place/controllers/getPlace.controller';
 import { Create } from '@place/controllers/createPlace.controller';
 import { Update } from '@place/controllers/updatePlace.controller';
 import { Delete } from '@place/controllers/deletePlace.controller';

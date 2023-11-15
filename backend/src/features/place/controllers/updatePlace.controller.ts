@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
 import { updatePlaceSchema } from '@root/features/place/schemes/place.schemes';
 import { JoiValidation } from '@global/decorators/joi-validation.decorators';
-import { DUMMY_PLACES } from '@place/controllers/getPlaces.controller';
+import { DUMMY_PLACES } from '@place/controllers/getPlace.controller';
 
 
 export class Update {

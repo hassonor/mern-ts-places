@@ -1,9 +1,10 @@
-import React, { FC, useRef } from "react";
+import React, { FC, useContext, useRef } from "react";
 import { TPlace } from "../../types/types";
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal, { ModalHandles } from "../../shared/components/UIElements/Modal";
 import GoogleMap from "../../shared/components/UIElements/GoogleMap.tsx";
+import { AuthContext } from "../../shared/context/auth-context.ts";
 
 interface PlaceItemProps {
     place: TPlace;
@@ -12,6 +13,8 @@ interface PlaceItemProps {
 const PlaceItem: FC<PlaceItemProps> = ({place}) => {
     const mapModalRef = useRef<ModalHandles>(null);
     const deleteModalRef = useRef<ModalHandles>(null);
+
+    const authCtx = useContext(AuthContext);
 
     const openMapHandler = () => {
         mapModalRef.current?.open();
@@ -71,8 +74,8 @@ const PlaceItem: FC<PlaceItemProps> = ({place}) => {
                     </div>
                     <div className="pt-4 text-center border-t border-gray-300 pb-4">
                         <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
-                        <Button to={`/places/${place.id}`}>EDIT</Button>
-                        <Button danger onClick={openConfirmDeleteHandler}>DELETE</Button>
+                        {authCtx.isLoggedIn && <Button to={`/places/${place.id}`}>EDIT</Button>}
+                        {authCtx.isLoggedIn && <Button danger onClick={openConfirmDeleteHandler}>DELETE</Button>}
                     </div>
                 </Card>
             </li>

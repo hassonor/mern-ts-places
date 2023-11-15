@@ -1,12 +1,16 @@
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import Card from "../../shared/components/UIElements/Card.tsx";
 import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/utils/validators.ts";
 import Input from "../../shared/components/FormElements/Input.tsx";
 import { useForm } from "../../shared/hooks/form-hook.ts";
 import Button from "../../shared/components/FormElements/Button.tsx";
+import { AuthContext } from "../../shared/context/auth-context.ts";
 
 const Auth: FC = () => {
     const [isLoginMode, setIsLoginMode] = useState(true);
+    const navigate = useNavigate();
+    const authCtx = useContext(AuthContext)
 
     const [formState, inputHandler, setFormData] = useForm({
         email: {
@@ -32,12 +36,13 @@ const Auth: FC = () => {
             }, false)
         }
         setIsLoginMode(prevMode => !prevMode);
-
     }
 
     const authSubmitHandler = event => {
         event.preventDefault();
         console.log(formState.inputs);
+        authCtx.login();
+        navigate('/');
     }
 
     return (

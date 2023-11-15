@@ -48,10 +48,10 @@ export class Get {
     public async placesByUserId(req: Request, res: Response): Promise<void> {
         const userId = req.params.userId;
 
-        const placesOfUser = DUMMY_PLACES.find(p => p.creator === userId);
+        const placesOfUser = DUMMY_PLACES.filter(p => p.creator === userId);
 
-        if (!placesOfUser) {
-            throw new NotFoundError('Could not find a place for the user id.');
+        if (!placesOfUser || placesOfUser.length === 0) {
+            throw new NotFoundError('Could not find places for the user id.');
         }
 
         res.status(HTTP_STATUS.OK).json(placesOfUser);

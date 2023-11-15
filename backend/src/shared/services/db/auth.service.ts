@@ -1,6 +1,9 @@
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { AuthModel } from '@auth/models/auth.schema';
 import { Helpers } from '@global/helpers/helpers';
+import { Types } from 'mongoose';
+import { IUserDocument } from '@user/interfaces/user.interface';
+import { UserModel } from '@user/models/user.schema';
 
 class AuthService {
     public async createAuthUser(data: IAuthDocument): Promise<void> {
@@ -25,6 +28,16 @@ class AuthService {
         return user;
     }
 
+    public async getUserById(userId: string): Promise<IUserDocument> {
+        const users: IUserDocument[] = await UserModel.aggregate([
+            {$match: {_id: new Types.ObjectId(userId)}},
+            {$lookup: {from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId'}},
+            {$unwind: '$authId'},
+            {$project: this.aggregateProject()}
+        ]);
+        return users[0];
+    }
+
     public async getAuthUserByUsername(username: string): Promise<IAuthDocument> {
         const user: IAuthDocument = (await AuthModel.findOne({username: Helpers.firstLetterUppercase(username)}).exec()) as IAuthDocument;
         return user;
@@ -42,6 +55,17 @@ class AuthService {
         }).exec()) as IAuthDocument;
         return user;
     }
+
+    private aggregateProject() {
+        return {
+            _id: 1,
+            username: '$authId.username',
+            uId: '$authId.uId',
+            email: '$authId.email',
+            createdAt: '$authId.createdAt'
+        };
+    }
+
 }
 
 export const authService: AuthService = new AuthService();

@@ -22,6 +22,7 @@ export class SignupController {
     @JoiValidation(signupSchema)
     public async create(req: Request, res: Response): Promise<void> {
         const {username, email, password, avatarColor, avatarImage} = req.body;
+        
         const checkIfUserExist: IAuthDocument = await authService.getUserByUsernameOrEmail(username, email);
         if (checkIfUserExist) {
             throw new BadRequestError('The user already exist');

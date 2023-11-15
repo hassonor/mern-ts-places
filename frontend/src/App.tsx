@@ -24,7 +24,7 @@ const router = createBrowserRouter([
                 element: <UsersPage/>
             },
             {
-                path: ':userId/places',
+                path: ':userId/place',
                 element: <UserPlaces/>
             },
             {
@@ -32,11 +32,11 @@ const router = createBrowserRouter([
                 element: <AuthenticationPage/>
             },
             {
-                path: 'places/new',
+                path: 'place/new',
                 element: <PrivateRoute><NewPlace/></PrivateRoute>,
             },
             {
-                path: 'places/:placeId',
+                path: 'place/:placeId',
                 element: <PrivateRoute><UpdatePlace/></PrivateRoute>,
             },
         ]

@@ -38,26 +38,8 @@
       "@user/*": [
         "src/features/user/*"
       ],
-      "@post/*": [
-        "src/features/post/*"
-      ],
-      "@reaction/*": [
-        "src/features/reactions/*"
-      ],
-      "@comment/*": [
-        "src/features/comments/*"
-      ],
-      "@follower/*": [
-        "src/features/followers/*"
-      ],
-      "@notification/*": [
-        "src/features/notifications/*"
-      ],
-      "@image/*": [
-        "src/features/images/*"
-      ],
-      "@chat/*": [
-        "src/features/chat/*"
+      "@place/*": [
+        "src/features/place/*"
       ],
       "@global/*": [
         "src/shared/globals/*"

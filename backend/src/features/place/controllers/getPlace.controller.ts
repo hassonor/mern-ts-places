@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
 import { NotFoundError } from '@global/helpers/error-handler';
+import { placeService } from '@service/db/place.service';
 
 
 export const DUMMY_PLACES = [{
@@ -36,13 +37,13 @@ export class Get {
     public async placeById(req: Request, res: Response): Promise<void> {
         const placeId = req.params.placeId;
 
-        const place = DUMMY_PLACES.find(p => p.id === placeId);
+        const place = await placeService.getPostById(placeId);
 
         if (!place) {
             throw new NotFoundError('Could not find a place for the provided id.');
         }
 
-        res.status(HTTP_STATUS.OK).json(place);
+        res.status(HTTP_STATUS.OK).json({message: 'Place found', place: place.toObject({getters: true})});
     }
 
     public async placesByUserId(req: Request, res: Response): Promise<void> {

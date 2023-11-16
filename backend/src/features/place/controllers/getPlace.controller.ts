@@ -37,7 +37,7 @@ export class Get {
     public async placeById(req: Request, res: Response): Promise<void> {
         const placeId = req.params.placeId;
 
-        const place = await placeService.getPostById(placeId);
+        const place = await placeService.getPlaceById(placeId);
 
         if (!place) {
             throw new NotFoundError('Could not find a place for the provided id.');

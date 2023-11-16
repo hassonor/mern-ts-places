@@ -15,7 +15,7 @@ export interface IPlaceDocument extends Document {
     createdAt: Date;
 }
 
-export interface IPlaceJob {
+export interface IPlaceData {
     _id: mongoose.Types.ObjectId;
     title: string;
     description: string;
@@ -26,6 +26,14 @@ export interface IPlaceJob {
     image: string
     address: string;
     creator: mongoose.Types.ObjectId | string;
+}
+
+export interface IPlaceUpdateJob {
+    placeId: string | mongoose.Types.ObjectId;
+    updateData: {
+        title?: string;
+        description?: string;
+    }
 }
 
 

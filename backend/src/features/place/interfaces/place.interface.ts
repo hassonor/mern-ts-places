@@ -28,9 +28,9 @@ export interface IPlaceData {
     creator: mongoose.Types.ObjectId | string;
 }
 
-export interface IPlaceUpdateJob {
+export interface IPlaceUpdateDeleteJob {
     placeId: string | mongoose.Types.ObjectId;
-    updateData: {
+    updateData?: {
         title?: string;
         description?: string;
     }

@@ -20,6 +20,11 @@ class PlaceService {
         const places = await PlaceModel.find({creator: userId}).exec();
         return places;
     }
+
+    public async deletePlace(id: string): Promise<IPlaceDocument | null> {
+        const deletedPlace = await PlaceModel.findByIdAndDelete(id).exec();
+        return deletedPlace;
+    }
 }
 
 export const placeService: PlaceService = new PlaceService();

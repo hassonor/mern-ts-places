@@ -11,7 +11,10 @@ class PlaceService {
         return post;
     }
 
-
+    public async placesByUserId(userId: string): Promise<IPlaceDocument[]> {
+        const places = (await PlaceModel.find({creator: userId}).exec()) as IPlaceDocument[];
+        return places;
+    }
 }
 
 

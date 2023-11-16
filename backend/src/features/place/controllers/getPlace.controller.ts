@@ -49,12 +49,14 @@ export class Get {
     public async placesByUserId(req: Request, res: Response): Promise<void> {
         const userId = req.params.userId;
 
-        const placesOfUser = DUMMY_PLACES.filter(p => p.creator === userId);
+        let places = await placeService.placesByUserId(userId);
 
-        if (!placesOfUser || placesOfUser.length === 0) {
+        if (!places || places.length === 0) {
             throw new NotFoundError('Could not find places for the user id.');
         }
 
-        res.status(HTTP_STATUS.OK).json(placesOfUser);
+        places = places.map(place => place.toObject({getters: true}));
+
+        res.status(HTTP_STATUS.OK).json({message: 'Places found', places: places});
     }
 }

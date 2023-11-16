@@ -5,6 +5,7 @@ import { IPlaceDocument } from '@root/features/place/interfaces/place.interface'
 const placeSchema: Schema = new Schema({
     title: String,
     description: String,
+    image: String,
     location: {
         lat: Number,
         lng: Number

@@ -15,15 +15,18 @@ const addPlaceSchema: ObjectSchema = Joi.object().keys({
     }),
     address: Joi.string().trim().required().messages({
         'string.base': 'Address must be of type string',
-        'any.required': 'Address is required'
+        'any.required': 'Address is required',
+        'string.empty': 'Address is a required field'
     }),
     image: Joi.string().trim().required().messages({
         'string.base': 'Image must be of type string',
-        'any.required': 'Image url is required'
+        'any.required': 'Image url is required',
+        'string.empty': 'Image is a required field'
     }),
     creator: Joi.string().trim().required().messages({
         'string.base': 'Creator must be of type string',
-        'any.required': 'Creator is required'
+        'any.required': 'Creator is required',
+        'string.empty': 'Creator is a required field'
     })
 });
 

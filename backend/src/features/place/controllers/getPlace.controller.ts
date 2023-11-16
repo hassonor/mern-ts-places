@@ -2,36 +2,26 @@ import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
 import { NotFoundError } from '@global/helpers/error-handler';
 import { placeService } from '@service/db/place.service';
+import { PlaceSort } from '@place/interfaces/place.interface';
 
-
-export const DUMMY_PLACES = [{
-    id: 'p1', title: 'My first place',
-    description: 'This is my first place',
-    imageUrl: 'https://triptins.com/wp-content/uploads/2020/10/Views-of-Mount-Everest.jpeg',
-    creator: 'u1',
-    address: 'QPV8+C97, Lukla - Everest Base Camp Trekking Route, Namche 56000, Nepal',
-    location: {
-        lat: 32.0700352,
-        lng: 34.7916835
-    }
-},
-    {
-        id: 'p2',
-        title: 'My second place',
-        description: 'This is my second place',
-        imageUrl: 'https://img.asmedia.epimg.net/resizer/PuXh197rDlHCJNZEUSLIQ5Bx5aU=/1472x1104/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/MGLDLRBRJVHNFJXBK5V3ATY2OM.jpg',
-        creator: 'u1',
-        address: 'QPV8+C97, Lukla - Everest Base Camp Trekking Route, Namche 56000, Nepal',
-        location: {
-            lat: 32.0700352,
-            lng: 34.7916835
-        }
-    }];
 
 export class Get {
     public async places(req: Request, res: Response): Promise<void> {
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 25;
 
-        res.status(HTTP_STATUS.OK).json({message: 'Places list', places: DUMMY_PLACES});
+        const sort: PlaceSort = req.query.sort ? JSON.parse(req.query.sort as string) : {};
+        const filter = req.query.filter ? JSON.parse(req.query.filter as string) : {};
+
+        const {places, total} = await placeService.getAllPlaces(page, limit, sort, filter);
+
+        res.status(HTTP_STATUS.OK).json({
+            message: 'Places list',
+            places: places,
+            total: total,
+            currentPage: page,
+            totalPages: Math.ceil(total / limit)
+        });
     }
 
     public async placeById(req: Request, res: Response): Promise<void> {
@@ -43,19 +33,17 @@ export class Get {
             throw new NotFoundError('Could not find a place for the provided id.');
         }
 
-        res.status(HTTP_STATUS.OK).json({message: 'Place found', place: place.toObject({getters: true})});
+        res.status(HTTP_STATUS.OK).json({message: 'Place found', place: place});
     }
 
     public async placesByUserId(req: Request, res: Response): Promise<void> {
         const userId = req.params.userId;
 
-        let places = await placeService.placesByUserId(userId);
+        const places = await placeService.placesByUserId(userId);
 
         if (!places || places.length === 0) {
             throw new NotFoundError('Could not find places for the user id.');
         }
-
-        places = places.map(place => place.toObject({getters: true}));
 
         res.status(HTTP_STATUS.OK).json({message: 'Places found', places: places});
     }

@@ -6,7 +6,7 @@ import { placeService } from '@service/db/place.service';
 import { BadRequestError } from '@global/helpers/error-handler';
 import { placeQueue } from '@service/queues/place.queue';
 
-
+// TODO: Add jest tests
 export class Update {
     @JoiValidation(updatePlaceSchema)
     @JoiValidation(updatePlaceSchema)

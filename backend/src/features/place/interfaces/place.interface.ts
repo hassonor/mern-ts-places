@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, SortOrder } from 'mongoose';
 
 
 export interface IPlaceDocument extends Document {
@@ -14,6 +14,14 @@ export interface IPlaceDocument extends Document {
     creator: mongoose.Types.ObjectId | string;
     createdAt: Date;
 }
+
+
+export type PlaceSort = {
+    [key in keyof IPlaceDocument]?: SortOrder;
+} & {
+    'location.lat'?: SortOrder;
+    'location.lng'?: SortOrder;
+};
 
 export interface IPlaceData {
     _id: mongoose.Types.ObjectId;

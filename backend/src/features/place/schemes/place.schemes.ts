@@ -13,16 +13,6 @@ const addPlaceSchema: ObjectSchema = Joi.object().keys({
         'string.max': 'Description too long, maximum 500 characters allowed',
         'string.empty': 'Description is a required field'
     }),
-    coordinates: Joi.object().keys({
-        lat: Joi.number().required().messages({
-            'number.base': 'Latitude must be a number',
-            'any.required': 'Latitude is required'
-        }),
-        lng: Joi.number().required().messages({
-            'number.base': 'Longitude must be a number',
-            'any.required': 'Longitude is required'
-        })
-    }).required(),
     address: Joi.string().trim().required().messages({
         'string.base': 'Address must be of type string',
         'any.required': 'Address is required'

@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Card from "../../shared/components/UIElements/Card.tsx";
 import {
-    VALIDATOR_EMAIL,
+    VALIDATOR_EMAIL, VALIDATOR_MAXLENGTH,
     VALIDATOR_MINLENGTH,
-    VALIDATOR_NO_SPACE,
-    VALIDATOR_REQUIRE
+    VALIDATOR_NO_SPACE
 } from "../../shared/utils/validators.ts";
 import Input from "../../shared/components/FormElements/Input.tsx";
 import { useForm } from "../../shared/hooks/form-hook.ts";
@@ -81,8 +80,8 @@ const Auth: FC = () => {
                         id="username"
                         type="text"
                         label="Username"
-                        validators={[VALIDATOR_REQUIRE(), VALIDATOR_NO_SPACE(), VALIDATOR_MINLENGTH(4)]}
-                        errorText="Please enter a valid username (no spaces and at least 4 chars)."
+                        validators={[VALIDATOR_NO_SPACE(), VALIDATOR_MINLENGTH(4), VALIDATOR_MAXLENGTH(15)]}
+                        errorText="Please enter a valid username (no spaces and between 4-15 characters)."
                         onInput={inputHandler}
                     />
                 )}
@@ -100,8 +99,8 @@ const Auth: FC = () => {
                     id="password"
                     type="password"
                     label="Password"
-                    validators={[VALIDATOR_MINLENGTH(7)]}
-                    errorText="Please enter a valid password (min. 7 characters)."
+                    validators={[VALIDATOR_MINLENGTH(7), VALIDATOR_MAXLENGTH(15)]}
+                    errorText="Please enter a valid password (between 7-15 characters)."
                     onInput={inputHandler}
                 />
                 <div className="flex justify-center">

@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { ReactNode, CSSProperties } from 'react';
 
-const Card = ({className, style, children}) => {
+type CardProps = {
+    className?: string;
+    style?: CSSProperties;
+    children?: ReactNode;
+};
+
+const Card: React.FC<CardProps> = ({className = '', style, children}) => {
     return (
         <div className={`relative m-0 shadow-lg rounded-lg overflow-hidden bg-white ${className}`} style={style}>
             {children}

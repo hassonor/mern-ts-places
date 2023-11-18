@@ -2,7 +2,7 @@ import Joi, { ObjectSchema } from 'joi';
 
 const objectIdRegex = /^[0-9a-fA-F]{24}$/;
 const signupSchema: ObjectSchema = Joi.object().keys({
-    username: Joi.string().required().min(4).max(8).messages({
+    username: Joi.string().required().min(4).max(10).messages({
         'string.base': 'Username must be of type string',
         'string.min': 'Invalid username',
         'string.max': 'Invalid username',
@@ -19,10 +19,6 @@ const signupSchema: ObjectSchema = Joi.object().keys({
         'string.email': 'Email must be valid',
         'string.empty': 'Email is a required field'
     }),
-    places: Joi.array().items(Joi.string().regex(objectIdRegex)).messages({
-        'array.base': 'Places must be an array',
-        'string.pattern.base': 'Each place must be a valid ObjectId'
-    })
 });
 
 export { signupSchema };

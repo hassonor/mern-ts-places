@@ -22,7 +22,7 @@ import * as process from 'process';
 import { config } from '@root/config';
 import applicationRoutes from '@root/routes';
 import { IErrorResponse, CustomError } from '@root/shared/globals/helpers/error-handler';
-import { SocketIOUserHandler } from "@socket/user.socket";
+import { SocketIOUserHandler } from '@socket/user.socket';
 
 const log: Logger = config.createLogger('server');
 

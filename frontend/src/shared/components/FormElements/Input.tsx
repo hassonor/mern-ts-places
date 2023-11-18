@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, useReducer, useEffect } from "react";
-import { validate, Validator } from "../../utils/validators.ts";
+import { validate, Validator } from "../../utils/validators";
 
 type InputProps = {
     element?: 'input' | 'textarea';
@@ -9,13 +9,23 @@ type InputProps = {
     rows?: number;
     label?: string;
     errorText?: string;
-    onInput: () => void;
+    onInput: (id: string, value: string, isValid: boolean) => void;
     validators?: Validator[];
     initialValue?: string;
     initialValid?: boolean;
 };
 
-const inputReducer = (state, action) => {
+type InputState = {
+    value: string;
+    isTouched: boolean;
+    isValid: boolean;
+};
+
+type InputAction =
+    | { type: 'CHANGE'; val: string; validators: Validator[] }
+    | { type: 'TOUCH' };
+
+const inputReducer = (state: InputState, action: InputAction): InputState => {
     switch (action.type) {
         case 'CHANGE':
             return {
@@ -27,35 +37,33 @@ const inputReducer = (state, action) => {
             return {
                 ...state,
                 isTouched: true
-            }
+            };
         default:
+            return state;
     }
-}
+};
 
 const Input: FC<InputProps> = (props) => {
     const [inputState, dispatch] = useReducer(inputReducer, {
         value: props.initialValue || '',
         isTouched: false,
         isValid: props.initialValid || false
-    })
+    });
 
     const {id, onInput} = props;
     const {value, isValid} = inputState;
 
     useEffect(() => {
-        onInput(id, value, isValid);
-    }, [id, value, isValid, onInput])
-
+        onInput(id as string, value, isValid);
+    }, [id, value, isValid, onInput]);
 
     const changeHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        dispatch({type: 'CHANGE', val: event.target.value, validators: props.validators});
-    }
+        dispatch({type: 'CHANGE', val: event.target.value, validators: props.validators || []});
+    };
 
     const touchHandler = () => {
-        dispatch({
-            type: 'TOUCH'
-        })
-    }
+        dispatch({type: 'TOUCH'});
+    };
 
     const element =
         props.element === 'input' ? (

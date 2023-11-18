@@ -2,6 +2,7 @@
 const VALIDATOR_TYPE_REQUIRE: string = 'REQUIRE';
 const VALIDATOR_TYPE_MINLENGTH: string = 'MINLENGTH';
 const VALIDATOR_TYPE_MAXLENGTH: string = 'MAXLENGTH';
+const VALIDATOR_TYPE_NO_SPACE: string = 'NO_SPACE';
 const VALIDATOR_TYPE_MIN: string = 'MIN';
 const VALIDATOR_TYPE_MAX: string = 'MAX';
 const VALIDATOR_TYPE_EMAIL: string = 'EMAIL';
@@ -21,6 +22,9 @@ export const VALIDATOR_MAXLENGTH = (val: number): { type: string; val: number } 
 export const VALIDATOR_MIN = (val: number): { type: string; val: number } => ({type: VALIDATOR_TYPE_MIN, val: val});
 export const VALIDATOR_MAX = (val: number): { type: string; val: number } => ({type: VALIDATOR_TYPE_MAX, val: val});
 export const VALIDATOR_EMAIL = (): { type: string } => ({type: VALIDATOR_TYPE_EMAIL});
+
+export const VALIDATOR_NO_SPACE = (): { type: string } => ({type: VALIDATOR_TYPE_NO_SPACE});
+
 
 // Define a type for the validator object
 export type Validator = {
@@ -49,6 +53,9 @@ export const validate = (value: string, validators: Validator[]): boolean => {
         }
         if (validator.type === VALIDATOR_TYPE_EMAIL) {
             isValid = isValid && /^\S+@\S+\.\S+$/.test(value);
+        }
+        if (validator.type === VALIDATOR_TYPE_NO_SPACE) {
+            isValid = isValid && !/\s/.test(value);
         }
     }
     return isValid;

@@ -1,6 +1,15 @@
 import React from 'react';
 
-const Avatar = ({image, alt, width, height, className}) => {
+// Define the props type
+type AvatarProps = {
+    image: string;
+    alt?: string;
+    width: string | number;
+    height: string | number;
+    className?: string;
+};
+
+const Avatar: React.FC<AvatarProps> = ({image, alt = '', width, height, className = ''}) => {
     const imgSize = `w-${width} h-${height}`;
 
     return (

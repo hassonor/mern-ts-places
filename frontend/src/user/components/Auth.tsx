@@ -1,7 +1,13 @@
-import { FC, useContext, useState } from "react";
+import { FC, FormEvent, useContext, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 import Card from "../../shared/components/UIElements/Card.tsx";
-import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/utils/validators.ts";
+import {
+    VALIDATOR_EMAIL,
+    VALIDATOR_MINLENGTH,
+    VALIDATOR_NO_SPACE,
+    VALIDATOR_REQUIRE
+} from "../../shared/utils/validators.ts";
 import Input from "../../shared/components/FormElements/Input.tsx";
 import { useForm } from "../../shared/hooks/form-hook.ts";
 import Button from "../../shared/components/FormElements/Button.tsx";
@@ -25,11 +31,11 @@ const Auth: FC = () => {
 
     const switchModeHandler = () => {
         if (!isLoginMode) {
-            setFormData({...formState.inputs, name: undefined}, formState.inputs.email.isValid && formState.inputs.password.isValid);
+            setFormData({...formState.inputs, username: undefined}, formState.inputs.email.isValid && formState.inputs.password.isValid);
         } else {
             setFormData({
                 ...formState.inputs,
-                name: {
+                username: {
                     value: '',
                     isValid: false
                 }
@@ -38,11 +44,30 @@ const Auth: FC = () => {
         setIsLoginMode(prevMode => !prevMode);
     }
 
-    const authSubmitHandler = event => {
+    const authSubmitHandler = async (event: FormEvent) => {
         event.preventDefault();
-        console.log(formState.inputs);
-        authCtx.login();
-        navigate('/');
+
+        try {
+            if (isLoginMode) {
+                const response = await axios.post('http://localhost:5000/api/v1/login', {
+                    email: formState.inputs.email.value,
+                    password: formState.inputs.password.value
+                });
+                console.log(response.data);
+            } else {
+                const response = await axios.post('http://localhost:5000/api/v1/signup', {
+                    username: formState.inputs.username.value,
+                    password: formState.inputs.password.value,
+                    email: formState.inputs.email.value
+                });
+                console.log(response.data);
+            }
+
+            authCtx.login();
+            navigate('/');
+        } catch (error) {
+            console.error('Error during signup:', error);
+        }
     }
 
     return (
@@ -53,11 +78,11 @@ const Auth: FC = () => {
                 {!isLoginMode && (
                     <Input
                         element="input"
-                        id="name"
+                        id="username"
                         type="text"
-                        label="Your Name"
-                        validators={[VALIDATOR_REQUIRE()]}
-                        errorText="Please enter a name."
+                        label="Username"
+                        validators={[VALIDATOR_REQUIRE(), VALIDATOR_NO_SPACE(), VALIDATOR_MINLENGTH(4)]}
+                        errorText="Please enter a valid username (no spaces and at least 4 chars)."
                         onInput={inputHandler}
                     />
                 )}

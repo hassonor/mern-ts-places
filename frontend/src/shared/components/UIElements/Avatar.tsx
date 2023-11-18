@@ -1,6 +1,5 @@
 import React from 'react';
 
-// Define the props type
 type AvatarProps = {
     image: string;
     alt?: string;

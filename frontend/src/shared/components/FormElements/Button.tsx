@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 interface ButtonProps {
     href?: string;
     to?: string;
-    exact?: boolean;
     type?: "button" | "submit" | "reset";
     onClick?: () => void;
     disabled?: boolean;
@@ -43,7 +42,6 @@ const Button: React.FC<ButtonProps> = (props) => {
         return (
             <Link
                 to={props.to}
-                exact={props.exact}
                 className={`${baseClasses} ${buttonColorClasses} ${sizeClasses}`}
             >
                 {props.children}

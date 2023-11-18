@@ -1,4 +1,4 @@
-import React, { FC, useContext, useRef } from "react";
+import { FC, useContext, useRef } from "react";
 import { TPlace } from "../../types/types";
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";

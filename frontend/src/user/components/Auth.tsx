@@ -11,9 +11,14 @@ import Input from "../../shared/components/FormElements/Input.tsx";
 import { useForm } from "../../shared/hooks/form-hook.ts";
 import Button from "../../shared/components/FormElements/Button.tsx";
 import { AuthContext } from "../../shared/context/auth-context.ts";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.tsx";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal.tsx";
 
 const Auth: FC = () => {
     const [isLoginMode, setIsLoginMode] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
     const navigate = useNavigate();
     const authCtx = useContext(AuthContext)
 
@@ -48,12 +53,9 @@ const Auth: FC = () => {
 
         try {
             if (isLoginMode) {
-                const response = await axios.post('http://localhost:5000/api/v1/login', {
-                    email: formState.inputs.email.value,
-                    password: formState.inputs.password.value
-                });
-                console.log(response.data);
+                //TODO: Login
             } else {
+                setIsLoading(true);
                 const response = await axios.post('http://localhost:5000/api/v1/signup', {
                     username: formState.inputs.username.value,
                     password: formState.inputs.password.value,
@@ -65,12 +67,20 @@ const Auth: FC = () => {
             authCtx.login();
             navigate('/');
         } catch (error) {
-            console.error('Error during signup:', error);
+            if (axios.isAxiosError(error)) {
+                setError(error?.response?.data?.message || "Something went wrong, please try again.");
+            } else {
+                setError("An error occurred. Please try again.");
+            }
+        } finally {
+            setIsLoading(false);
         }
     }
 
     return (
         <Card className="w-full max-w-lg mx-auto mt-24 p-8 bg-white rounded-xl shadow-xl">
+            {isLoading && <LoadingSpinner asOverlay/>}
+            {error && <ErrorModal error={error} onClear={() => setError(null)}/>}
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">{isLoginMode ? 'Login' : 'Sign Up'} Required</h2>
             <hr className="mb-6 border-gray-300"/>
             <form className="space-y-8" onSubmit={authSubmitHandler}>
@@ -113,10 +123,10 @@ const Auth: FC = () => {
 
                 </div>
                 <div className="flex justify-center">
-                    <Button inverse onClick={switchModeHandler}>SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}</Button>
+                    <Button inverse onClick={switchModeHandler}>SWITCH
+                        TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}</Button>
                 </div>
             </form>
-
         </Card>
     )
 }

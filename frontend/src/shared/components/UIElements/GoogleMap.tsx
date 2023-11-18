@@ -1,26 +1,28 @@
-import { FC, useRef, useEffect } from "react";
+import { FC, useRef, useEffect, CSSProperties } from "react";
 
+interface GoogleMapProps {
+    center: google.maps.LatLngLiteral;
+    zoom: number;
+    className?: string;
+    style?: CSSProperties;
+}
 
-const GoogleMap: FC = props => {
-    const mapRef = useRef();
-
-    const {center, zoom} = props;
+const GoogleMap: FC<GoogleMapProps> = ({center, zoom, className, style}) => {
+    const mapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const map = new window.google.maps.Map(mapRef.current, {
-            center: center,
-            zoom: zoom
-        });
+        if (mapRef.current) {
+            const map = new google.maps.Map(mapRef.current, {
+                center: center,
+                zoom: zoom
+            });
 
-        new window.google.maps.Marker({position: center, map: map});
-
+            new google.maps.Marker({position: center, map: map});
+        }
     }, [center, zoom]);
 
-
     return (
-        <div ref={mapRef} className={`w-full h-full ${props.className}`} style={props.style}>
-
-        </div>
+        <div ref={mapRef} className={`w-full h-full ${className}`} style={style}/>
     );
 }
 

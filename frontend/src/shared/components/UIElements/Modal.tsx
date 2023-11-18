@@ -1,10 +1,11 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState, useEffect } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef, useState, useEffect, CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 
 interface ModalProps {
-    title: React.ReactNode;
-    footer: React.ReactNode;
-    children: React.ReactNode;
+    title: React.ReactNode,
+    footer: React.ReactNode,
+    children: React.ReactNode,
+    style?: CSSProperties
 }
 
 export interface ModalHandles {
@@ -12,10 +13,10 @@ export interface ModalHandles {
     close: () => void;
 }
 
-const Modal = forwardRef<ModalHandles, ModalProps>(({title, footer, children}, ref) => {
+const Modal = forwardRef<ModalHandles, ModalProps>(({title, footer, children, style}, ref) => {
     const dialog = useRef<HTMLDialogElement>(null);
     const [isOpen, setIsOpen] = useState(false);
-    const closeTimeout = useRef<NodeJS.Timeout | null>(null);
+    const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useImperativeHandle(ref, () => ({
         open: () => {
@@ -50,7 +51,8 @@ const Modal = forwardRef<ModalHandles, ModalProps>(({title, footer, children}, r
 
     return createPortal(
         <dialog ref={dialog}
-                className={`fixed inset-0 m-auto bg-white shadow-lg z-auto rounded-lg ${modalAnimationClass}`}>
+                className={`fixed inset-0 m-auto bg-white shadow-lg z-auto rounded-lg ${modalAnimationClass}`}
+                style={style}>
             <header className="py-4 px-2 bg-[#2a006e] text-white">
                 <div className="m-2">{title}</div>
             </header>

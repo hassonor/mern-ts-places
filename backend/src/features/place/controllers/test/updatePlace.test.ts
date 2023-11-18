@@ -3,6 +3,7 @@ import HTTP_STATUS from 'http-status-codes';
 import { Update } from '@place/controllers/updatePlace.controller';
 import { placeService } from '@service/db/place.service';
 import { placeQueue } from '@service/queues/place.queue';
+import { authUserPayload } from '@root/mocks/auth.mock';
 
 jest.mock('@service/db/place.service', () => ({
     placeService: {
@@ -21,6 +22,7 @@ describe('Update Place Controller', () => {
 
     beforeEach(() => {
         req = {
+            currentUser: authUserPayload,
             params: {placeId: '123'},
             body: {
                 title: 'New Title',
@@ -39,11 +41,10 @@ describe('Update Place Controller', () => {
 
     it('should update a place and return the updated place preview', async () => {
         const existingPlace = {
-            toObject: (p: { getters: boolean }) => ({
-                id: '123',
-                title: 'Old Title',
-                description: 'Old Description'
-            })
+            id: '123',
+            title: 'Old Title',
+            description: 'Old Description',
+            creator: authUserPayload.userId
         };
         jest.mocked(placeService.getPlaceById).mockResolvedValue(existingPlace as any);
 
@@ -76,6 +77,25 @@ describe('Update Place Controller', () => {
         expect(placeService.getPlaceById).toHaveBeenCalledWith('123');
         expect(placeQueue.addPlaceJob).not.toHaveBeenCalled();
         expect(res.status).not.toHaveBeenCalledWith(HTTP_STATUS.OK);
+    });
+
+    it('should throw an error if not authorized', async () => {
+        const existingPlace = {
+            _id: '123',
+            title: 'Old Title',
+            description: 'Old Description',
+            creator: 'anotherUserId'
+        };
+        jest.mocked(placeService.getPlaceById).mockResolvedValue(existingPlace as any);
+
+        const controller = new Update();
+
+        await expect(controller.place(req as Request, res as Response))
+            .rejects.toThrow('You are not authorized to update this.');
+
+        expect(placeService.getPlaceById).toHaveBeenCalledWith('123');
+        expect(placeQueue.addPlaceJob).not.toHaveBeenCalled();
+        expect(res.status).not.toHaveBeenCalled();
     });
 
 });

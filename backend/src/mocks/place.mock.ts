@@ -13,6 +13,25 @@ export const getCoordsForAddress = jest.fn().mockImplementation((address: string
     });
 });
 
+import { AuthPayload } from '@auth/interfaces/auth.interface';
+
+
+export interface IPlaceMock {
+    title?: string;
+    description?: string;
+    address?: string;
+    image?: string;
+    creator?: string;
+    // other fields as needed
+}
+
+
+export const placeMockRequest = (body: any, currentUser?: AuthPayload | null, params?: any) => ({
+    body,
+    params,
+    currentUser
+});
+
 export const placeServiceMocks = {
     getAllPlaces: jest.fn(),
     getPlaceById: jest.fn(),

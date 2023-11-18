@@ -35,9 +35,9 @@ class PlaceWorker {
 
     async deletePlaceInDB(job: Job, done: DoneCallback): Promise<void> {
         try {
-            const {placeId} = job.data;
+            const {userId, placeId} = job.data;
 
-            await placeService.deletePlace(placeId);
+            await placeService.deletePlace(userId, placeId);
             job.progress(100);
             done(null, job.data);
         } catch (error) {

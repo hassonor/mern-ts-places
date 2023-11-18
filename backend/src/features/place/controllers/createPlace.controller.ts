@@ -12,7 +12,7 @@ import { IPlaceDocument } from '@place/interfaces/place.interface';
 export class Create {
     @JoiValidation(addPlaceSchema)
     public async place(req: Request, res: Response): Promise<void> {
-        const {title, description, address, image, creator} = req.body;
+        const {title, description, address, image} = req.body;
         let coordinates;
 
         try {
@@ -29,7 +29,7 @@ export class Create {
             image,
             location: coordinates,
             address,
-            creator
+            creator: req.currentUser!.userId
         } as unknown as IPlaceDocument;
 
         placeQueue.addPlaceJob('addPlaceToDB', createdPlace);

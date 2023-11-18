@@ -38,6 +38,7 @@ export interface IPlaceData {
 
 export interface IPlaceUpdateDeleteJob {
     placeId: string | mongoose.Types.ObjectId;
+    userId?: string | mongoose.Types.ObjectId;
     updateData?: {
         title?: string;
         description?: string;

@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
-import { mockedAxios, placeQueueMock } from '@root/mocks/place.mock';
+import { mockedAxios, placeQueueMock, placeMockRequest } from '@root/mocks/place.mock';
 import { Create } from '@place/controllers/createPlace.controller';
+import { authUserPayload } from '@root/mocks/auth.mock';
+import { AuthPayload } from '@auth/interfaces/auth.interface';
 
 jest.mock('axios');
 jest.mock('@service/queues/place.queue', () => ({
@@ -9,23 +11,22 @@ jest.mock('@service/queues/place.queue', () => ({
 }));
 
 describe('Create Place Controller Tests', () => {
-    let req: Partial<Request>;
+    let req: { currentUser: AuthPayload | null | undefined; body: any; params: any };
     let res: Partial<Response>;
 
     beforeEach(() => {
-        req = {
-            body: {
-                title: 'Historic Museum',
-                description: 'A lovely spot in the heart of the city.',
-                address: '123 Main St, Anytown, USA',
-                image: 'https://example.com/image4.jpg',
-                creator: '6471dc7e3ad83f9e03d9ccf6'
-            }
-        };
+        req = placeMockRequest({
+            title: 'Historic Museum',
+            description: 'A lovely spot in the heart of the city.',
+            address: '123 Main St, Anytown, USA',
+            image: 'https://example.com/image4.jpg',
+            creator: '6471dc7e3ad83f9e03d9ccf6'
+        }, authUserPayload);
         res = {
             status: jest.fn().mockReturnThis(),
             json: jest.fn()
         };
+
         mockedAxios.get.mockResolvedValue({
             data: {
                 results: [{geometry: {location: {lat: 37.09024, lng: -95.712891}}}],

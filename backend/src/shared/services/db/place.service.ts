@@ -1,10 +1,15 @@
 import { PlaceModel } from '@place/models/place.schema';
 import { IPlaceDocument, PlaceSort } from '@place/interfaces/place.interface';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, UpdateQuery } from 'mongoose';
+import { IUserDocument } from '@user/interfaces/user.interface';
+import { UserModel } from '@user/models/user.schema';
 
 class PlaceService {
     public async createPlace(data: IPlaceDocument): Promise<void> {
-        await PlaceModel.create(data);
+        const place = await PlaceModel.create(data);
+        const user: UpdateQuery<IUserDocument> = await UserModel.updateOne({_id: data.creator}, {$addToSet: {places: data._id}});
+
+        await Promise.all([place, user]);
     }
 
     public async getPlaceById(id: string): Promise<IPlaceDocument | null> {
@@ -22,9 +27,10 @@ class PlaceService {
         return places.map(place => place.toObject({getters: true}));
     }
 
-    public async deletePlace(id: string): Promise<IPlaceDocument | null> {
-        const deletedPlace = await PlaceModel.findByIdAndDelete(id).exec();
-        return deletedPlace;
+    public async deletePlace(userId: string, placeId: string): Promise<void> {
+        const deletePlace = await PlaceModel.findByIdAndDelete(placeId);
+        const deletePlaceFromUser = await UserModel.findByIdAndUpdate(userId, {$pull: {places: placeId}});
+        await Promise.all([deletePlace, deletePlaceFromUser]);
     }
 
     public async getAllPlaces(
@@ -32,7 +38,10 @@ class PlaceService {
         limit: number,
         sort: PlaceSort = {},
         filter: FilterQuery<IPlaceDocument> = {}
-    ): Promise<{ places: IPlaceDocument[], total: number }> {
+    ): Promise<{
+        places: IPlaceDocument[],
+        total: number
+    }> {
         const skip = (page - 1) * limit;
         const query = PlaceModel.find(filter);
         const total = await PlaceModel.countDocuments(filter);

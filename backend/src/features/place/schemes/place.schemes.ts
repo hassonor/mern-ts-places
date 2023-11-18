@@ -23,9 +23,8 @@ const addPlaceSchema: ObjectSchema = Joi.object().keys({
         'any.required': 'Image url is required',
         'string.empty': 'Image is a required field'
     }),
-    creator: Joi.string().trim().required().messages({
+    creator: Joi.string().trim().messages({
         'string.base': 'Creator must be of type string',
-        'any.required': 'Creator is required',
         'string.empty': 'Creator is a required field'
     })
 });

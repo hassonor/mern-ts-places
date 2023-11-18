@@ -14,11 +14,12 @@ import { IUserDocument } from '@user/interfaces/user.interface';
 import { config } from '@root/config';
 import { authQueue } from '@service/queues/auth.queue';
 import { userQueue } from '@service/queues/user.queue';
+import { Types } from 'mongoose';
 
 export class SignupController {
     @JoiValidation(signupSchema)
     public async create(req: Request, res: Response): Promise<void> {
-        const {username, email, password} = req.body;
+        const {username, email, password, places} = req.body;
 
         const checkIfUserExist: IAuthDocument = await authService.getUserByUsernameOrEmail(username, email);
         if (checkIfUserExist) {
@@ -79,6 +80,8 @@ export class SignupController {
             username: Helpers.firstLetterUppercase(username),
             email,
             password,
+            profilePicture: 'https://www.vhv.rs/dpng/d/312-3120300_default-profile-hd-png-download.png',
+            places: [new Types.ObjectId('655643f1198721ec372a6972')],
         } as unknown as IUserDocument;
     }
 }

@@ -8,7 +8,7 @@ import { placeService } from '@service/db/place.service';
 
 jest.mock('@service/db/place.service');
 
-describe('Get Controller', () => {
+describe('Get Places Controller', () => {
     let req: Partial<Request>;
     let res: Partial<Response>;
     let getController: Get;

@@ -5,6 +5,10 @@ export const existingUser = {
     uId: '1621613119252066',
     username: 'Manny',
     email: 'manny@me.com',
+    profilePicture: 'https://www.vhv.rs/dpng/d/312-3120300_default-profile-hd-png-download.png',
+    places: [
+        '655643f1198721ec372a6972'
+    ],
     createdAt: new Date()
 } as unknown as IUserDocument;
 

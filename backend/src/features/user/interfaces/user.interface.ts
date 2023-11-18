@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document, SortOrder } from 'mongoose';
 import { ObjectId } from 'mongodb';
 
 export interface IUserDocument extends Document {
@@ -8,8 +8,19 @@ export interface IUserDocument extends Document {
     email?: string;
     password?: string;
     uId?: string;
+    profilePicture: string;
     createdAt?: Date;
 }
+
+export interface UserFilter {
+    email?: string;
+    username?: string;
+    createdAt?: Date | string;
+}
+
+export type UserSort = {
+    [key in keyof IUserDocument]?: SortOrder;
+};
 
 export interface IResetPasswordParams {
     username: string;

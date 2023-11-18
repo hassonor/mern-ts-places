@@ -8,7 +8,6 @@ import { placeQueue } from '@service/queues/place.queue';
 
 export class Update {
     @JoiValidation(updatePlaceSchema)
-    @JoiValidation(updatePlaceSchema)
     public async place(req: Request, res: Response): Promise<void> {
         const {title, description} = req.body;
         const placeId = req.params.placeId;
@@ -25,7 +24,7 @@ export class Update {
         });
 
         const updatedPlacePreview = {
-            ...place.toObject({getters: true}),
+            ...place,
             title,
             description
         };

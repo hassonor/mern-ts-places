@@ -9,7 +9,7 @@ class PlaceService {
 
     public async getPlaceById(id: string): Promise<IPlaceDocument | null> {
         const place = await PlaceModel.findById(id).exec();
-        return place;
+        return place ? place?.toObject({getters: true}) : place;
     }
 
     public async updatePlace(id: string, updateData: Partial<IPlaceDocument>): Promise<IPlaceDocument | null> {
@@ -19,7 +19,7 @@ class PlaceService {
 
     public async placesByUserId(userId: string): Promise<IPlaceDocument[]> {
         const places = await PlaceModel.find({creator: userId}).exec();
-        return places;
+        return places.map(place => place.toObject({getters: true}));
     }
 
     public async deletePlace(id: string): Promise<IPlaceDocument | null> {
@@ -43,7 +43,9 @@ class PlaceService {
             query.sort(sort);
         }
 
-        const places = await query.exec();
+        let places = await query.exec();
+
+        places = places.map(place => place.toObject({getters: true}));
 
         return {places, total};
     }

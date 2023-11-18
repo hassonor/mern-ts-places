@@ -59,7 +59,7 @@ describe('Update Place Controller', () => {
         expect(res.json).toHaveBeenCalledWith({
             message: 'Update placed successfully',
             place: {
-                ...existingPlace.toObject({getters: true}),
+                ...existingPlace,
                 title: 'New Title',
                 description: 'New Description'
             }

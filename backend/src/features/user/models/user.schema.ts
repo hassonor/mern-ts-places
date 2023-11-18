@@ -6,7 +6,7 @@ const userSchema: Schema = new Schema({
     profilePicture: {type: String, default: ''},
     passwordResetToken: {type: String, default: ''},
     passwordResetExpires: {type: Number},
-    places: {type: [mongoose.Schema.Types.ObjectId], ref: 'Place'},
+    places: [{type: mongoose.Schema.Types.ObjectId, ref: 'Place'}],
     createdAt: {type: Date, default: Date.now}
 });
 

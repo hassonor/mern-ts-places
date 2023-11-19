@@ -13,7 +13,7 @@ class PlaceService {
     }
 
     public async getPlaceById(id: string): Promise<IPlaceDocument | null> {
-        const place = await PlaceModel.findById(id).exec();
+        const place = await PlaceModel.findById(id).lean().exec();
         return place;
     }
 

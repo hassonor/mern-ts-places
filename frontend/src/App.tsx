@@ -32,11 +32,11 @@ const router = createBrowserRouter([
                 element: <AuthenticationPage/>
             },
             {
-                path: 'place/new',
+                path: 'places/new',
                 element: <PrivateRoute><NewPlace/></PrivateRoute>,
             },
             {
-                path: 'place/:placeId',
+                path: 'places/:placeId',
                 element: <PrivateRoute><UpdatePlace/></PrivateRoute>,
             },
         ]
@@ -55,7 +55,6 @@ function App(): ReactElement {
     const loginAction = useCallback((userId: string, userToken: string) => {
         setIsLoggedIn(true);
         setUserId(userId);
-        console.log(JSON.stringify(userToken));
         window.localStorage.setItem("session", JSON.stringify(userToken));
     }, [])
 

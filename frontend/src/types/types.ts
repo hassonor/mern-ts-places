@@ -41,3 +41,8 @@ export type TUserPlacesResponse = {
     message: string;
     places: TPlace[];
 }
+
+export type TPlaceByIdResponse = {
+    message: string;
+    place: TPlace;
+}

@@ -107,7 +107,7 @@ describe('Get Places Controller', () => {
         expect(placeService.placesByUserId).toHaveBeenCalledWith('testUserId');
         expect(res.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
         expect(res.json).toHaveBeenCalledWith({
-            message: 'Places found',
+            message: 'User places found',
             places: [{_id: 'testPlaceId', title: 'Test Place'}],
         });
     });

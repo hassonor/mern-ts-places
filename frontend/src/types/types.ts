@@ -1,13 +1,32 @@
 export type TUser = {
-    id: string;
-    imageUrl: string;
+    _id: string;
+    profilePicture: string;
+    places: any[];
     username: string;
-    placeCount: number;
+    uId: string;
+    email: string;
+    createdAt: string;
+    authId: string;
 }
 
+export type TUsersResponse = {
+    message: string;
+    users: TUser[];
+    total: number;
+    currentPage: number;
+    totalPages: number;
+}
+
+export type TUserResponse = {
+    message: string;
+    user: TUser;
+    token: string;
+}
+
+
 export type TPlace = {
-    id: string,
-    imageUrl: string,
+    _id: string,
+    image: string,
     title: string,
     description: string,
     address: string,
@@ -16,4 +35,9 @@ export type TPlace = {
         lat: number,
         lng: number
     }
+}
+
+export type TUserPlacesResponse = {
+    message: string;
+    places: TPlace[];
 }

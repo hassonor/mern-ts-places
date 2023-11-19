@@ -1,12 +1,35 @@
 import { FC, FormEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { DUMMY_PLACES } from "./UserPlaces.tsx";
 import Input from "../../shared/components/FormElements/Input.tsx";
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/utils/validators.ts";
 import Button from "../../shared/components/FormElements/Button.tsx";
 import { useForm } from "../../shared/hooks/form-hook.ts";
 import Card from "../../shared/components/UIElements/Card.tsx";
+import { TPlace } from "../../types/types.ts";
 
+const DUMMY_PLACES: TPlace[] = [{
+    _id: 'p1', title: 'My first place',
+    description: 'This is my first place',
+    imageUrl: 'https://triptins.com/wp-content/uploads/2020/10/Views-of-Mount-Everest.jpeg',
+    creator: 'u1',
+    address: 'QPV8+C97, Lukla - Everest Base Camp Trekking Route, Namche 56000, Nepal',
+    location: {
+        lat: 32.0700352,
+        lng: 34.7916835
+    }
+},
+    {
+        _id: 'p2',
+        title: 'My second place',
+        description: 'This is my second place',
+        imageUrl: 'https://img.asmedia.epimg.net/resizer/PuXh197rDlHCJNZEUSLIQ5Bx5aU=/1472x1104/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/MGLDLRBRJVHNFJXBK5V3ATY2OM.jpg',
+        creator: 'u1',
+        address: 'QPV8+C97, Lukla - Everest Base Camp Trekking Route, Namche 56000, Nepal',
+        location: {
+            lat: 32.0700352,
+            lng: 34.7916835
+        }
+    }];
 const UpdatePlace: FC = () => {
     const placeId = useParams().placeId;
     const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +45,7 @@ const UpdatePlace: FC = () => {
         }
     }, true);
 
-    const identifiedPlace = DUMMY_PLACES.find(p => p.id === placeId);
+    const identifiedPlace = DUMMY_PLACES.find(p => p._id === placeId);
 
     useEffect(() => {
         if (identifiedPlace) {

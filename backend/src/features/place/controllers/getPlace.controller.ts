@@ -36,6 +36,7 @@ export class Get {
         res.status(HTTP_STATUS.OK).json({message: 'Place found', place: place});
     }
 
+    // TODO: Add server side pagination,sorting and filtering
     public async placesByUserId(req: Request, res: Response): Promise<void> {
         const userId = req.params.userId;
 
@@ -45,6 +46,6 @@ export class Get {
             throw new NotFoundError('Could not find places for the user id.');
         }
 
-        res.status(HTTP_STATUS.OK).json({message: 'Places found', places: places});
+        res.status(HTTP_STATUS.OK).json({message: 'User places found', places: places});
     }
 }

@@ -10,16 +10,13 @@ interface ErrorModalProps {
 const ErrorModal: FC<ErrorModalProps> = ({error, onClear}) => {
     const modalRef = useRef<ModalHandles>(null);
 
-    // Open the modal when there is an error
     useEffect(() => {
         if (error) {
             modalRef.current?.open();
+        } else {
+            modalRef.current?.close();
         }
     }, [error]);
-
-    if (!error) {
-        return null;
-    }
 
     return (
         <Modal

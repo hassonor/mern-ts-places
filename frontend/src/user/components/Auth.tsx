@@ -1,6 +1,5 @@
 import { FC, FormEvent, useContext, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
 import Card from "../../shared/components/UIElements/Card.tsx";
 import {
     VALIDATOR_EMAIL, VALIDATOR_MAXLENGTH,
@@ -13,11 +12,12 @@ import Button from "../../shared/components/FormElements/Button.tsx";
 import { AuthContext } from "../../shared/context/auth-context.ts";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.tsx";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal.tsx";
+import useHttpClient from "../../shared/hooks/http-hook.ts";
+import { TUserResponse } from "../../types/types.ts";
 
 const Auth: FC = () => {
     const [isLoginMode, setIsLoginMode] = useState(true);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const {isLoading, error, sendRequest, clearError} = useHttpClient();
 
     const navigate = useNavigate();
     const authCtx = useContext(AuthContext)
@@ -35,7 +35,10 @@ const Auth: FC = () => {
 
     const switchModeHandler = () => {
         if (!isLoginMode) {
-            setFormData({...formState.inputs, username: undefined}, formState.inputs.email.isValid && formState.inputs.password.isValid);
+            setFormData({
+                ...formState.inputs,
+                username: undefined
+            }, formState.inputs.email.isValid && formState.inputs.password.isValid);
         } else {
             setFormData({
                 ...formState.inputs,
@@ -51,36 +54,29 @@ const Auth: FC = () => {
     const authSubmitHandler = async (event: FormEvent) => {
         event.preventDefault();
 
-        try {
-            if (isLoginMode) {
-                //TODO: Login
-            } else {
-                setIsLoading(true);
-                const response = await axios.post('http://localhost:5000/api/v1/signup', {
-                    username: formState.inputs.username.value,
-                    password: formState.inputs.password.value,
-                    email: formState.inputs.email.value
-                });
-                console.log(response.data);
-            }
+        const userData = {
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+            ...(isLoginMode ? {} : {username: formState.inputs.username.value})
+        };
 
-            authCtx.login();
-            navigate('/');
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                setError(error?.response?.data?.message || "Something went wrong, please try again.");
-            } else {
-                setError("An error occurred. Please try again.");
-            }
-        } finally {
-            setIsLoading(false);
-        }
+        const endpoint = isLoginMode ? 'signin' : 'signup';
+        sendRequest(`http://localhost:5000/api/v1/${endpoint}`, 'POST', userData)
+            .then((response) => {
+                const userResponse = response as TUserResponse;
+                authCtx.login(userResponse.user._id, userResponse.token);
+                navigate('/');
+            })
+            .catch(() => {
+                // Since error handling is managed by useHttpClient, this catch block might not be necessary.
+                // However, if you want to perform any additional actions on error, you can do it here.
+            });
     }
 
     return (
         <Card className="w-full max-w-lg mx-auto mt-24 p-8 bg-white rounded-xl shadow-xl">
             {isLoading && <LoadingSpinner asOverlay/>}
-            {error && <ErrorModal error={error} onClear={() => setError(null)}/>}
+            {error && <ErrorModal error={error} onClear={clearError}/>}
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">{isLoginMode ? 'Login' : 'Sign Up'} Required</h2>
             <hr className="mb-6 border-gray-300"/>
             <form className="space-y-8" onSubmit={authSubmitHandler}>

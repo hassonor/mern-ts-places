@@ -26,7 +26,7 @@ export class Create {
             _id: placeObjectId,
             title,
             description,
-            image,
+            image: image || 'https://images.lifestyleasia.com/wp-content/uploads/sites/7/2021/12/14223631/andres-iga-7XKkJVw1d8c-unsplash-1600x900.jpg',
             location: coordinates,
             address,
             creator: req.currentUser!.userId

@@ -1,39 +1,36 @@
-import { FC } from "react";
-import { TPlace } from "../../types/types.ts";
+import { FC, useEffect, useState } from "react";
+import { TPlace, TUserPlacesResponse } from "../../types/types.ts";
 import PlaceList from "../components/PlaceList.tsx";
 import { useParams } from "react-router-dom";
+import useHttpClient from "../../shared/hooks/http-hook.ts";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal.tsx";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.tsx";
 
-export const DUMMY_PLACES: TPlace[] = [{
-    id: 'p1', title: 'My first place',
-    description: 'This is my first place',
-    imageUrl: 'https://triptins.com/wp-content/uploads/2020/10/Views-of-Mount-Everest.jpeg',
-    creator: 'u1',
-    address: 'QPV8+C97, Lukla - Everest Base Camp Trekking Route, Namche 56000, Nepal',
-    location: {
-        lat: 32.0700352,
-        lng: 34.7916835
-    }
-},
-    {
-        id: 'p2',
-        title: 'My second place',
-        description: 'This is my second place',
-        imageUrl: 'https://img.asmedia.epimg.net/resizer/PuXh197rDlHCJNZEUSLIQ5Bx5aU=/1472x1104/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/MGLDLRBRJVHNFJXBK5V3ATY2OM.jpg',
-        creator: 'u1',
-        address: 'QPV8+C97, Lukla - Everest Base Camp Trekking Route, Namche 56000, Nepal',
-        location: {
-            lat: 32.0700352,
-            lng: 34.7916835
-        }
-    }];
 
 const UserPlaces: FC = () => {
-    const userId: string = useParams().userId;
+    const {isLoading, error, sendRequest, clearError} = useHttpClient();
+    const [loadedPlaces, setLoadedPlaces] = useState<TPlace[]>([]);
 
-    const loadedPlaces = DUMMY_PLACES.filter(place => place.creator === userId);
+    const userId: string | undefined = useParams().userId;
+
+    useEffect(() => {
+        const fetchPlaces = async () => {
+            try {
+                const response = await sendRequest<TPlace[]>(`http://localhost:5000/api/v1/places/user/${userId}`) as unknown as TUserPlacesResponse;
+                setLoadedPlaces(response.places);
+            } catch (err) {
+                // Error handling is managed by useHttpClient
+            }
+        };
+        fetchPlaces();
+    }, [sendRequest, userId])
 
     return (
-        <PlaceList items={loadedPlaces}/>
+        <>
+            {error && <ErrorModal error={error} onClear={clearError}/>}
+            {isLoading && <div className="mx-auto p-1 w-8/10 max-w-xl"><LoadingSpinner/></div>}
+            {!isLoading && loadedPlaces && <PlaceList places={loadedPlaces}/>}
+        </>
     )
 }
 

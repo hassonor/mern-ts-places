@@ -24,7 +24,7 @@ const router = createBrowserRouter([
                 element: <UsersPage/>
             },
             {
-                path: ':userId/place',
+                path: ':userId/places',
                 element: <UserPlaces/>
             },
             {
@@ -49,18 +49,25 @@ const router = createBrowserRouter([
 
 function App(): ReactElement {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userId, setUserId] = useState<string | null>(null);
 
-    const loginAction = useCallback(() => {
+
+    const loginAction = useCallback((userId: string, userToken: string) => {
         setIsLoggedIn(true);
+        setUserId(userId);
+        console.log(JSON.stringify(userToken));
+        window.localStorage.setItem("session", JSON.stringify(userToken));
     }, [])
 
     const logoutAction = useCallback(() => {
         setIsLoggedIn(false);
+        setUserId(null);
+        window.localStorage.removeItem("session");
     }, [])
 
     return (
         <AuthContext.Provider value={{
-            isLoggedIn: isLoggedIn, login: loginAction, logout: logoutAction
+            isLoggedIn: isLoggedIn, userId: userId, login: loginAction, logout: logoutAction
         }}>
             <RouterProvider router={router}/>
         </AuthContext.Provider>)

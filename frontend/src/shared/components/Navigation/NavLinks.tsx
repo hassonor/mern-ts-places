@@ -39,7 +39,7 @@ const NavLinks: FC<NavLinksProps> = ({onNavLinksClick}) => {
             </li>}
             {autCtx.isLoggedIn && <li className="m-4 lg:mx-2">
                 <NavLink
-                    to="/places/new"
+                    to="place/new"
                     onClick={onNavLinksClick}
                     className={({isActive}) =>
                         isActive
@@ -52,7 +52,7 @@ const NavLinks: FC<NavLinksProps> = ({onNavLinksClick}) => {
             </li>}
             {!autCtx.isLoggedIn && <li className="m-4 lg:mx-2">
                 <NavLink
-                    to="/auth"
+                    to="auth"
                     onClick={onNavLinksClick}
                     className={({isActive}) =>
                         isActive

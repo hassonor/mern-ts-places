@@ -43,6 +43,7 @@ const PlaceItem: FC<PlaceItemProps> = ({place}) => {
                 ref={mapModalRef}
                 title={<h2 className="font-extrabold text-lg">{place.address}</h2>}
                 footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
+                style={{width: '80%', maxWidth: '600px'}}
             >
                 <div className="h-80 w-full">
                     <GoogleMap center={place.location} zoom={16}/>
@@ -65,7 +66,7 @@ const PlaceItem: FC<PlaceItemProps> = ({place}) => {
             <li className="my-4">
                 <Card className="p-0">
                     <div className="w-full h-32 mr-6 lg:h-80">
-                        <img src={place.imageUrl} alt={place.title} className="w-full h-full object-cover"/>
+                        <img src={place.image} alt={place.title} className="w-full h-full object-cover"/>
                     </div>
                     <div className="p-4 text-center">
                         <h2 className="mb-2 font-extrabold">{place.title}</h2>
@@ -74,7 +75,7 @@ const PlaceItem: FC<PlaceItemProps> = ({place}) => {
                     </div>
                     <div className="pt-4 text-center border-t border-gray-300 pb-4">
                         <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
-                        {authCtx.isLoggedIn && <Button to={`/places/${place.id}`}>EDIT</Button>}
+                        {authCtx.isLoggedIn && <Button to={`/places/${place._id}`}>EDIT</Button>}
                         {authCtx.isLoggedIn && <Button danger onClick={openConfirmDeleteHandler}>DELETE</Button>}
                     </div>
                 </Card>

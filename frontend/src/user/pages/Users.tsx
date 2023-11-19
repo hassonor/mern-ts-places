@@ -1,30 +1,34 @@
-import { FC, ReactElement } from 'react';
-import { TUser } from "../../types/types.ts";
+import { FC, ReactElement, useEffect, useState } from 'react';
 import UsersList from "../components/UsersList.tsx";
-
-
-const DUMMY_USERS: TUser[] = [
-    {
-        id: 'u1',
-        username: 'Shira Yosef',
-        imageUrl: "https://ak.picdn.net/shutterstock/videos/7905244/thumb/11.jpg?ip=x480",
-        placeCount: 3
-    },
-    {
-        id: 'u2',
-        username: 'Or Hasson',
-        imageUrl: "https://ak.picdn.net/shutterstock/videos/7905244/thumb/11.jpg?ip=x480",
-        placeCount: 2
-    }
-]
+import { TUsersResponse, TUser } from "../../types/types.ts";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal.tsx";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.tsx";
+import useHttpClient from "../../shared/hooks/http-hook.ts"; // Import useHttpClient
 
 const UsersPage: FC = (): ReactElement => {
+    const {isLoading, error, sendRequest, clearError} = useHttpClient();
+    const [loadedUsers, setLoadedUsers] = useState<TUser[]>([]);
+
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await sendRequest<TUsersResponse>('http://localhost:5000/api/v1/users') as unknown as TUsersResponse;
+                setLoadedUsers(response.users);
+            } catch (err) {
+                // Error handling is managed by useHttpClient
+            }
+        };
+
+        fetchUsers();
+    }, [sendRequest]);
 
     return (
         <div className="flex justify-center">
-            <UsersList items={DUMMY_USERS}/>
+            {error && <ErrorModal error={error} onClear={clearError}/>}
+            {isLoading && loadedUsers.length === 0 ? <LoadingSpinner asOverlay/> : <UsersList users={loadedUsers}/>}
         </div>
-    )
+    );
 }
 
 export default UsersPage;

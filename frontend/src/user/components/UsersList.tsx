@@ -4,11 +4,11 @@ import { TUser } from "../../types/types.ts";
 import Card from "../../shared/components/UIElements/Card.tsx";
 
 interface UsersListProps {
-    items: TUser[];
+    users: TUser[];
 }
 
-const UsersList: FC<UsersListProps> = ({items}): ReactElement => {
-    if (items.length === 0) {
+const UsersList: FC<UsersListProps> = ({users}): ReactElement => {
+    if (users.length === 0) {
         return (
             <Card>
                 <div className="flex justify-center">
@@ -19,9 +19,9 @@ const UsersList: FC<UsersListProps> = ({items}): ReactElement => {
     }
     return (
         <ul className="list-none m-0 my-auto p-0 w-9/10 max-w-4xl flex justify-center flex-wrap">
-            {items.map((user) => (
+            {users.map((user) => (
                 <UserItem
-                    key={user.id}
+                    key={user._id}
                     user={user}
                 />
             ))}

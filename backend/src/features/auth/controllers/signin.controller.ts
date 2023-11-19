@@ -14,8 +14,15 @@ import { IUserDocument } from '@user/interfaces/user.interface';
 export class SignInController {
     @JoiValidation(loginSchema)
     public async read(req: Request, res: Response): Promise<void> {
-        const {username, password} = req.body;
-        const existingUser: IAuthDocument = await authService.getAuthUserByUsername(username);
+        const {email, username, password} = req.body;
+        let existingUser: IAuthDocument;
+        
+        if (email) {
+            existingUser = await authService.getAuthUserByEmail(email);
+        } else {
+            existingUser = await authService.getAuthUserByUsername(username);
+        }
+
         if (!existingUser) {
             throw new BadRequestError('Invalid credentials');
         }

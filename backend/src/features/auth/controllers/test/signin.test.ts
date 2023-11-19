@@ -122,4 +122,42 @@ describe('SignIn', () => {
             token: req.session?.jwt
         });
     });
+
+    it('should throw an error if email is not valid', () => {
+        const req: Request = authMockRequest({}, {email: 'invalid-email', password: PASSWORD}) as Request;
+        const res: Response = authMockResponse();
+        SignInController.prototype.read(req, res).catch((error: CustomError) => {
+            expect(error.statusCode).toEqual(400);
+            expect(error.serializeErrors().message).toEqual('Email must be valid');
+        });
+    });
+
+    it('should set session data for valid email credentials and send correct json response', async () => {
+        const req: Request = authMockRequest({}, {email: 'valid@email.com', password: PASSWORD}) as Request;
+        const res: Response = authMockResponse();
+        authMock.comparePassword = () => Promise.resolve(true);
+        jest.spyOn(authService, 'getAuthUserByEmail').mockResolvedValue(authMock);
+        jest.spyOn(userService, 'getUserByAuthId').mockResolvedValue(mergedAuthAndUserData);
+
+        await SignInController.prototype.read(req, res);
+        expect(req.session?.jwt).toBeDefined();
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            message: 'User login successfully',
+            user: mergedAuthAndUserData,
+            token: req.session?.jwt
+        });
+    });
+
+    it('should throw "Invalid credentials" if email does not exist', () => {
+        const req: Request = authMockRequest({}, {email: 'nonexistent@email.com', password: PASSWORD}) as Request;
+        const res: Response = authMockResponse();
+        jest.spyOn(authService, 'getAuthUserByEmail').mockResolvedValueOnce(null as any);
+
+        SignInController.prototype.read(req, res).catch((error: CustomError) => {
+            expect(authService.getAuthUserByEmail).toHaveBeenCalledWith(req.body.email);
+            expect(error.statusCode).toEqual(400);
+            expect(error.serializeErrors().message).toEqual('Invalid credentials');
+        });
+    });
 });

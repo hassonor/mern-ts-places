@@ -60,7 +60,7 @@ describe('SignUp', () => {
         const req: Request = authMockRequest(
             {},
             {
-                username: 'mathematics',
+                username: 'mathematics312342423423324234432234234',
                 email: 'orh@google.com',
                 password: 'qwerty',
             }
@@ -78,7 +78,7 @@ describe('SignUp', () => {
             {
                 username: 'hassonor',
                 email: 'not valid',
-                password: 'qwerty',
+                password: 'qwerty123123',
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -95,7 +95,7 @@ describe('SignUp', () => {
             {
                 username: 'hassonor',
                 email: '',
-                password: 'qwerty',
+                password: 'qwerty123123',
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -159,7 +159,7 @@ describe('SignUp', () => {
             {
                 username: 'hassonor',
                 email: 'orh@google.com',
-                password: 'qwerty',
+                password: 'qwerty123123',
             }
         ) as Request;
         const res: Response = authMockResponse();

@@ -1,6 +1,5 @@
 import Joi, { ObjectSchema } from 'joi';
 
-const objectIdRegex = /^[0-9a-fA-F]{24}$/;
 const signupSchema: ObjectSchema = Joi.object().keys({
     username: Joi.string().required().min(4).max(15).messages({
         'string.base': 'Username must be of type string',

@@ -9,7 +9,7 @@ import { authService } from '@service/db/auth.service';
 import { userService } from '@service/db/user.service';
 
 const USERNAME = 'Manny';
-const PASSWORD = 'manny1';
+const PASSWORD = 'manny1234567';
 const WRONG_USERNAME = 'ma';
 const WRONG_PASSWORD = 'ma';
 const LONG_PASSWORD = 'mathematics1';
@@ -51,7 +51,7 @@ describe('SignIn', () => {
         const res: Response = authMockResponse();
         SignInController.prototype.read(req, res).catch((error: CustomError) => {
             expect(error.statusCode).toEqual(400);
-            expect(error.serializeErrors().message).toEqual('Invalid username');
+            expect(error.serializeErrors().message).toEqual('Invalid password');
         });
     });
 
@@ -106,7 +106,7 @@ describe('SignIn', () => {
         });
     });
 
-    it('should set session data for valid credentials and send correct json response', async() => {
+    it('should set session data for valid credentials and send correct json response', async () => {
         const req: Request = authMockRequest({}, {username: USERNAME, password: PASSWORD}) as Request;
         const res: Response = authMockResponse();
         authMock.comparePassword = () => Promise.resolve(true);

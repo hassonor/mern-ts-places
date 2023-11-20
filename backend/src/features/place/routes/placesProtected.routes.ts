@@ -6,7 +6,7 @@ import { authMiddleware } from '@global/helpers/auth-middleware';
 
 
 class PlacesProtectedRoutes {
-    private router: Router;
+    private readonly router: Router;
 
     constructor() {
         this.router = express.Router();

@@ -3,7 +3,7 @@ import { Get } from '@place/controllers/getPlace.controller';
 
 
 class PlacesPublicRoutes {
-    private router: Router;
+    private readonly router: Router;
 
     constructor() {
         this.router = express.Router();
@@ -20,4 +20,3 @@ class PlacesPublicRoutes {
 }
 
 export const placesPublicRoutes: PlacesPublicRoutes = new PlacesPublicRoutes();
-

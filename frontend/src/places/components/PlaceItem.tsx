@@ -55,7 +55,6 @@ const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
                 ref={mapModalRef}
                 title={<h2 className="font-extrabold text-lg">{place.address}</h2>}
                 footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
-                style={{width: '80%', maxWidth: '600px'}}
             >
                 <div className="h-80 w-full">
                     <GoogleMap center={place.location} zoom={16}/>
@@ -75,18 +74,20 @@ const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
                     Do you want to proceed and delete this place? Please note that it can't be undone thereafter.
                 </p>
             </Modal>
-            <li className="my-4">
-                <Card className="p-0">
+            <li className="flex justify-center my-4">
+                <Card
+                    className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl p-0">
                     {isLoading && <LoadingSpinner asOverlay/>}
                     <div className="w-full h-32 mr-6 lg:h-80">
                         <img src={place.image} alt={place.title} className="w-full h-full object-cover"/>
                     </div>
                     <div className="p-4 text-center">
-                        <h2 className="mb-2 font-extrabold">{place.title}</h2>
-                        <h3 className="mb-2 font-extrabold">{place.address}</h3>
-                        <p className="mb-2">{place.description}</p>
+                        <h2 className="mb-2 font-extrabold text-sm lg:text-base">{place.title}</h2>
+                        <h3 className="mb-2 font-extrabold text-sm lg:text-base">{place.address}</h3>
+                        <p className="mb-2 text-xs lg:text-sm">{place.description}</p>
                     </div>
-                    <div className="pt-4 text-center border-t border-gray-300 pb-4">
+                    <div
+                        className="pt-4 text-center border-t border-gray-300 pb-4 mx-2 sm:mx-4 md:mx-6 lg:mx-8 xl:mx-10">
                         <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
                         {authCtx.isLoggedIn && authCtx.userId === place.creator &&
                             <Button to={`/places/${place._id}`}>EDIT</Button>}

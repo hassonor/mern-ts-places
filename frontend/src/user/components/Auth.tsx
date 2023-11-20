@@ -14,6 +14,7 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.ts
 import ErrorModal from "../../shared/components/UIElements/ErrorModal.tsx";
 import useHttpClient from "../../shared/hooks/http-hook.ts";
 import { TUserResponse } from "../../types/types.ts";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload.tsx";
 
 const Auth: FC = () => {
     const [isLoginMode, setIsLoginMode] = useState(true);
@@ -74,12 +75,12 @@ const Auth: FC = () => {
     }
 
     return (
-        <Card className="w-full max-w-lg mx-auto mt-24 p-8 bg-white rounded-xl shadow-xl">
+        <Card className="w-full max-w-md mx-auto mt-10 p-3 bg-white rounded-xl shadow-xl sm:max-w-lg lg:max-w-xl">
             {isLoading && <LoadingSpinner asOverlay/>}
             {error && <ErrorModal error={error} onClear={clearError}/>}
-            <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">{isLoginMode ? 'Login' : 'Sign Up'} Required</h2>
+            <h2 className="text-2xl font-bold text-center text-gray-800 mb-8 sm:text-3xl">{isLoginMode ? 'Login' : 'Sign Up'} Required</h2>
             <hr className="mb-6 border-gray-300"/>
-            <form className="space-y-8" onSubmit={authSubmitHandler}>
+            <form className="space-y-4 sm:space-y-6" onSubmit={authSubmitHandler}>
                 {!isLoginMode && (
                     <Input
                         element="input"
@@ -91,6 +92,7 @@ const Auth: FC = () => {
                         onInput={inputHandler}
                     />
                 )}
+                {!isLoginMode && <ImageUpload center id="image"/>}
                 <Input
                     element="input"
                     id="email"

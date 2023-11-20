@@ -6,9 +6,10 @@ import { FC } from "react";
 
 interface PlaceListProps {
     places: TPlace[];
+    onDelete: (deletedPlaceId: string) => void
 }
 
-const PlaceList: FC<PlaceListProps> = ({places}) => {
+const PlaceList: FC<PlaceListProps> = ({places, onDelete}) => {
     if (places.length === 0) {
         return (
             <div className="mx-auto p-1 w-8/10 max-w-xl">
@@ -22,7 +23,7 @@ const PlaceList: FC<PlaceListProps> = ({places}) => {
     return (
         <ul className="list-none mx-auto p-0 w-9/10 max-w-xl">
             {places.map((place) => (
-                <PlaceItem key={place._id} place={place}/>
+                <PlaceItem key={place._id} place={place} onDelete={onDelete}/>
             ))}
         </ul>
     );

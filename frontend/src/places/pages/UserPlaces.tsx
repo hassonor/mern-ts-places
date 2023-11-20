@@ -25,11 +25,15 @@ const UserPlaces: FC = () => {
         fetchPlaces();
     }, [sendRequest, userId])
 
+    const placeDeleteHandler = async (deletedPlaceId: string) => {
+        setLoadedPlaces(prevPlaces => prevPlaces.filter(place => place._id !== deletedPlaceId));
+    }
+
     return (
         <>
             {error && <ErrorModal error={error} onClear={clearError}/>}
             {isLoading && <div className="mx-auto p-1 w-8/10 max-w-xl"><LoadingSpinner/></div>}
-            {!isLoading && loadedPlaces && <PlaceList places={loadedPlaces}/>}
+            {!isLoading && loadedPlaces && <PlaceList places={loadedPlaces} onDelete={placeDeleteHandler}/>}
         </>
     )
 }

@@ -5,12 +5,17 @@ import Button from "../../shared/components/FormElements/Button";
 import Modal, { ModalHandles } from "../../shared/components/UIElements/Modal";
 import GoogleMap from "../../shared/components/UIElements/GoogleMap.tsx";
 import { AuthContext } from "../../shared/context/auth-context.ts";
+import useHttpClient from "../../shared/hooks/http-hook.ts";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal.tsx";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.tsx";
 
 interface PlaceItemProps {
     place: TPlace;
+    onDelete: (deletedPlaceId: string) => void
 }
 
-const PlaceItem: FC<PlaceItemProps> = ({place}) => {
+const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
+    const {isLoading, error, sendRequest, clearError} = useHttpClient();
     const mapModalRef = useRef<ModalHandles>(null);
     const deleteModalRef = useRef<ModalHandles>(null);
 
@@ -32,13 +37,20 @@ const PlaceItem: FC<PlaceItemProps> = ({place}) => {
         deleteModalRef.current?.close();
     };
 
-    const confirmDeletePlaceHandler = () => {
+    const confirmDeletePlaceHandler = async () => {
         deleteModalRef.current?.close();
-        console.log("Deleting...");
+        try {
+            await sendRequest(`http://localhost:5000/api/v1/places/${place._id}`, 'DELETE')
+            onDelete(place._id);
+            deleteModalRef.current?.close();
+        } catch (error) {
+            console.error("Error deleting place:", error);
+        }
     };
 
     return (
         <>
+            <ErrorModal error={error} onClear={clearError}/>
             <Modal
                 ref={mapModalRef}
                 title={<h2 className="font-extrabold text-lg">{place.address}</h2>}
@@ -65,6 +77,7 @@ const PlaceItem: FC<PlaceItemProps> = ({place}) => {
             </Modal>
             <li className="my-4">
                 <Card className="p-0">
+                    {isLoading && <LoadingSpinner asOverlay/>}
                     <div className="w-full h-32 mr-6 lg:h-80">
                         <img src={place.image} alt={place.title} className="w-full h-full object-cover"/>
                     </div>
@@ -75,8 +88,10 @@ const PlaceItem: FC<PlaceItemProps> = ({place}) => {
                     </div>
                     <div className="pt-4 text-center border-t border-gray-300 pb-4">
                         <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
-                        {authCtx.isLoggedIn && <Button to={`/places/${place._id}`}>EDIT</Button>}
-                        {authCtx.isLoggedIn && <Button danger onClick={openConfirmDeleteHandler}>DELETE</Button>}
+                        {authCtx.isLoggedIn && authCtx.userId === place.creator &&
+                            <Button to={`/places/${place._id}`}>EDIT</Button>}
+                        {authCtx.isLoggedIn && authCtx.userId === place.creator &&
+                            <Button danger onClick={openConfirmDeleteHandler}>DELETE</Button>}
                     </div>
                 </Card>
             </li>

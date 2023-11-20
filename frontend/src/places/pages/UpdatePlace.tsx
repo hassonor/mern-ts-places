@@ -54,7 +54,7 @@ const UpdatePlace: FC = () => {
     }, [sendRequest, placeId, setFormData]);
 
 
-    const addPlaceSubmitHandler = async (event: FormEvent) => {
+    const addPlaceSubmitHandler = (event: FormEvent) => {
         event.preventDefault();
         try {
             const updatedPlaceData = {
@@ -63,12 +63,12 @@ const UpdatePlace: FC = () => {
             }
 
 
-            await sendRequest(`http://localhost:5000/api/v1/places/655a2295cc1a42ff8eb3920a`, 'PATCH', updatedPlaceData)
+            sendRequest(`http://localhost:5000/api/v1/places/${placeId}`, 'PATCH', updatedPlaceData)
                 .then(() => {
                     navigate(`/${authCtx.userId}/places`);
                 })
                 .catch(() => {
-                    // Error handling is managed by useHttpClient, but additional actions can be performed here if needed
+
                 });
 
 

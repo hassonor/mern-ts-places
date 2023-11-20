@@ -26,7 +26,7 @@ const NavLinks: FC<NavLinksProps> = ({onNavLinksClick}) => {
             </li>
             {autCtx.isLoggedIn && <li className="m-4 lg:mx-2">
                 <NavLink
-                    to="/u1/places"
+                    to={`${autCtx.userId}/places`}
                     onClick={onNavLinksClick}
                     className={({isActive}) =>
                         isActive

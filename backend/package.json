@@ -21,7 +21,7 @@
   "author": "Or Hasson",
   "license": "MIT",
   "dependencies": {
-    "@bull-board/express": "^4.12.2",
+    "@bull-board/express": "^5.9.1",
     "@faker-js/faker": "^8.3.1",
     "@jest/types": "^29.6.3",
     "@sendgrid/mail": "^7.7.0",

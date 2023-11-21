@@ -18,7 +18,7 @@ import { userQueue } from '@service/queues/user.queue';
 export class SignupController {
     @JoiValidation(signupSchema)
     public async create(req: Request, res: Response): Promise<void> {
-        const {username, email, password} = req.body;
+        const {username, email, password, profilePicture} = req.body;
 
         const checkIfUserExist: IAuthDocument = await authService.getUserByUsernameOrEmail(username, email);
         if (checkIfUserExist) {
@@ -32,7 +32,13 @@ export class SignupController {
             _id: authObjectId, uId, username, email, password
         });
 
+        const result: UploadApiResponse = await uploads(profilePicture, `${userObjectId}`, true, true) as UploadApiResponse;
+        if (!result?.public_id) {
+            throw new BadRequestError('File upload: Error occurred. Try again.');
+        }
+
         const userDataForDB: IUserDocument = SignupController.prototype.userData(authData, userObjectId);
+        userDataForDB.profilePicture = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${userObjectId}`;
 
         // Add to DB
         authQueue.addAuthUserJob('addAuthUserToDB', {value: authData});
@@ -79,7 +85,6 @@ export class SignupController {
             username: Helpers.firstLetterUppercase(username),
             email,
             password,
-            profilePicture: 'https://www.vhv.rs/dpng/d/312-3120300_default-profile-hd-png-download.png',
             places: [],
         } as unknown as IUserDocument;
     }

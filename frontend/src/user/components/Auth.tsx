@@ -38,13 +38,18 @@ const Auth: FC = () => {
         if (!isLoginMode) {
             setFormData({
                 ...formState.inputs,
-                username: undefined
+                username: undefined,
+                profilePicture: undefined
             }, formState.inputs.email.isValid && formState.inputs.password.isValid);
         } else {
             setFormData({
                 ...formState.inputs,
                 username: {
                     value: '',
+                    isValid: false
+                },
+                profilePicture: {
+                    value: null,
                     isValid: false
                 }
             }, false)
@@ -55,11 +60,22 @@ const Auth: FC = () => {
     const authSubmitHandler = async (event: FormEvent) => {
         event.preventDefault();
 
-        const userData = {
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-            ...(isLoginMode ? {} : {username: formState.inputs.username.value})
-        };
+        let userData;
+        console.log(formState.inputs);
+        if (!isLoginMode) {
+            userData = {
+                email: formState.inputs.email.value,
+                password: formState.inputs.password.value,
+                username: formState.inputs.username.value,
+                profilePicture: formState.inputs.profilePicture.value
+            };
+        } else {
+            userData = {
+                email: formState.inputs.email.value,
+                password: formState.inputs.password.value
+            };
+        }
+
 
         const endpoint = isLoginMode ? 'signin' : 'signup';
         sendRequest(`http://localhost:5000/api/v1/${endpoint}`, 'POST', userData)
@@ -70,7 +86,6 @@ const Auth: FC = () => {
             })
             .catch(() => {
                 // Since error handling is managed by useHttpClient, this catch block might not be necessary.
-                // However, if you want to perform any additional actions on error, you can do it here.
             });
     }
 
@@ -92,7 +107,6 @@ const Auth: FC = () => {
                         onInput={inputHandler}
                     />
                 )}
-                {!isLoginMode && <ImageUpload center id="image"/>}
                 <Input
                     element="input"
                     id="email"
@@ -111,6 +125,7 @@ const Auth: FC = () => {
                     errorText="Please enter a valid password (between 7-15 characters)."
                     onInput={inputHandler}
                 />
+                {!isLoginMode && <ImageUpload center id="profilePicture" onInput={inputHandler}/>}
                 <div className="flex justify-center">
                     <Button
                         type="submit"

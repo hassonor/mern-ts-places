@@ -25,6 +25,7 @@ export interface IAuthMock {
     _id?: string;
     username?: string;
     email?: string;
+    profilePicture?: string;
     uId?: string;
     password?: string;
     createdAt?: Date | string;

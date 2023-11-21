@@ -18,6 +18,9 @@ const signupSchema: ObjectSchema = Joi.object().keys({
         'string.email': 'Email must be valid',
         'string.empty': 'Email is a required field'
     }),
+    profilePicture: Joi.string().required().messages({
+        'any.required': 'profilePicture image is required'
+    })
 });
 
 export { signupSchema };

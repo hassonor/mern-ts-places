@@ -3,9 +3,9 @@ import { Request, Response } from 'express';
 import * as cloudinaryUploads from '@global/helpers/cloudinary-upload';
 import { SignupController } from '@auth/controllers/signup.controller';
 import { CustomError } from '@global/helpers/error-handler';
-
 import { authService } from '@service/db/auth.service';
 import { authMock, authMockRequest, authMockResponse } from '@root/mocks/auth.mock';
+
 
 jest.useFakeTimers();
 jest.mock('@service/queues/base.queue');
@@ -29,7 +29,8 @@ describe('SignUp', () => {
             {
                 username: '',
                 email: 'orh@google.com',
-                password: 'qwerty1234',
+                password: 'qwerty1234214',
+                profilePicture: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -46,7 +47,8 @@ describe('SignUp', () => {
             {
                 username: 'ma',
                 email: 'orh@google.com',
-                password: 'qwerty',
+                password: 'qwerty23141423',
+                profilePicture: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -62,7 +64,8 @@ describe('SignUp', () => {
             {
                 username: 'mathematics312342423423324234432234234',
                 email: 'orh@google.com',
-                password: 'qwerty',
+                password: 'qwerty12442',
+                profilePicture: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -79,6 +82,7 @@ describe('SignUp', () => {
                 username: 'hassonor',
                 email: 'not valid',
                 password: 'qwerty123123',
+                profilePicture: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -96,6 +100,7 @@ describe('SignUp', () => {
                 username: 'hassonor',
                 email: '',
                 password: 'qwerty123123',
+                profilePicture: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -111,7 +116,8 @@ describe('SignUp', () => {
             {
                 username: 'hassonor',
                 email: 'orh@google.com',
-                password: ''
+                password: '',
+                profilePicture: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -127,7 +133,8 @@ describe('SignUp', () => {
             {
                 username: 'hassonor',
                 email: 'orh@google.com',
-                password: 'ma'
+                password: 'ma',
+                profilePicture: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -144,6 +151,7 @@ describe('SignUp', () => {
                 username: 'hassonor',
                 email: 'orh@google.com',
                 password: 'mathematics1',
+                profilePicture: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -160,6 +168,7 @@ describe('SignUp', () => {
                 username: 'hassonor',
                 email: 'orh@google.com',
                 password: 'qwerty123123',
+                profilePicture: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -171,31 +180,36 @@ describe('SignUp', () => {
         });
     });
 
-    // TODO: FIX THIS TEST
-    // xit('should set session data for valid credentials and send correct json response', async () => {
-    //     const req: Request = authMockRequest(
-    //         {},
-    //         {
-    //             username: 'hassonor',
-    //             email: 'orh@google.com',
-    //             password: 'qwerty',
-    //         }
-    //     ) as Request;
-    //     const res: Response = authMockResponse();
-    //
-    //     jest.spyOn(authService, 'getUserByUsernameOrEmail').mockResolvedValue(null as any);
-    //     const userSpy = jest.spyOn(, 'saveUserToCache');
-    //     jest.spyOn(cloudinaryUploads, 'uploads').mockImplementation((): any => Promise.resolve({
-    //         version: '1234737373',
-    //         public_id: '123456'
-    //     }));
-    //
-    //     await SignupController.prototype.create(req, res);
-    //     expect(req.session?.jwt).toBeDefined();
-    //     expect(res.json).toHaveBeenCalledWith({
-    //         message: 'User were created successfully',
-    //         user: userSpy.mock.calls[0][2],
-    //         token: req.session?.jwt
-    //     });
-    // });
+    it('should set session data for valid credentials and send correct json response', async () => {
+        const req: Request = authMockRequest(
+            {},
+            {
+                username: 'hassonor',
+                email: 'orh@google.com',
+                password: 'qwerty343421432',
+                profilePicture: 'data:image/png;base64,...' // Your base64 image string
+            }
+        ) as Request;
+        const res: Response = authMockResponse();
+
+        // Mock the relevant functions
+        jest.spyOn(authService, 'getUserByUsernameOrEmail').mockResolvedValue(null as any);
+
+        jest.spyOn(cloudinaryUploads, 'uploads').mockImplementation((): any => Promise.resolve({
+            version: '1234737373',
+            public_id: '123456'
+        }));
+
+        // Call the function under test
+        await SignupController.prototype.create(req, res);
+
+        expect(req.session?.jwt).toBeDefined();
+        expect(res.status).toHaveBeenCalledWith(201);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+            message: 'User were created successfully',
+            user: expect.any(Object),
+            token: expect.any(String)
+        }));
+    });
+
 });

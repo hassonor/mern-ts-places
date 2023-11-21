@@ -31,7 +31,7 @@ export const useHttpClient = () => {
                     method,
                     url,
                     data: body,
-                    headers,
+                    headers: body instanceof FormData ? undefined : headers,
                     withCredentials: true,
                     cancelToken: cancelTokenSource.token
                 });

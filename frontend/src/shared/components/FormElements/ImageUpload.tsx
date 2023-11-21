@@ -1,16 +1,39 @@
-import React, { useRef, FC } from 'react';
+import React, { FC, useState, useRef } from 'react';
 import Button from './Button';
 
 interface ImageUploadProps {
     id: string;
     center?: boolean;
+    onInput: (id: string, fileBase64: string | null, isValid: boolean) => void;
 }
 
-const ImageUpload: FC<ImageUploadProps> = ({id, center}) => {
+const ImageUpload: FC<ImageUploadProps> = ({id, center, onInput}) => {
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [isValid, setIsValid] = useState<boolean | null>(null);
+
     const filePickerRef = useRef<HTMLInputElement>(null);
 
+    const convertToBase64 = (file: File) => {
+        const fileReader = new FileReader();
+        fileReader.onload = () => {
+            const base64String = fileReader.result as string;
+            setPreviewUrl(base64String);
+            setIsValid(true);
+            onInput(id, base64String, true);
+        };
+        fileReader.readAsDataURL(file);
+    };
+
     const pickedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target);
+        if (event.target.files && event.target.files.length === 1) {
+            const pickedFile = event.target.files[0];
+            convertToBase64(pickedFile);
+        } else {
+            if (isValid) {
+                setIsValid(false);
+                onInput(id, null, false);
+            }
+        }
     };
 
     const pickImageHandler = () => {
@@ -18,7 +41,7 @@ const ImageUpload: FC<ImageUploadProps> = ({id, center}) => {
     };
 
     return (
-        <div className="flex flex-col p-4  border-gray-300 rounded-lg">
+        <div className={`flex flex-col p-4 border-gray-300 rounded-lg ${center ? 'items-center' : ''}`}>
             <input
                 id={id}
                 ref={filePickerRef}
@@ -27,12 +50,17 @@ const ImageUpload: FC<ImageUploadProps> = ({id, center}) => {
                 accept=".jpg,.png,.jpeg"
                 onChange={pickedHandler}
             />
-            <div className={`flex ${center ? 'justify-center items-center' : ''} flex-col`}>
-                <div className="w-40 h-40 border border-gray-300 flex justify-center items-center text-center mb-5">
-                    <img src="" alt="Preview" className="w-full h-full object-cover"/>
-                </div>
-                <Button type="button" onClick={pickImageHandler}>UPLOAD IMAGE</Button>
+            <div className="w-40 h-40 border border-gray-300 flex justify-center items-center text-center mb-5">
+                {previewUrl ? (
+                    <img src={previewUrl} alt="Preview" className="w-full h-full object-cover"/>
+                ) : (
+                    <p>No image selected</p>
+                )}
             </div>
+            <Button type="button" onClick={pickImageHandler}>UPLOAD IMAGE</Button>
+            {isValid === false && (
+                <p className="text-red-500">Please pick a valid image</p>
+            )}
         </div>
     );
 };

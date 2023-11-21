@@ -42,7 +42,7 @@ export class Get {
 
         const places = await placeService.placesByUserId(userId);
 
-        if (!places || places.length === 0) {
+        if (!places) {
             throw new NotFoundError('Could not find places for the user id.');
         }
 

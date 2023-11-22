@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
+import * as cloudinaryUploads from '@global/helpers/cloudinary-upload';
 import { mockedAxios, placeQueueMock, placeMockRequest } from '@root/mocks/place.mock';
 import { Create } from '@place/controllers/createPlace.controller';
 import { authUserPayload } from '@root/mocks/auth.mock';
@@ -9,6 +10,7 @@ jest.mock('axios');
 jest.mock('@service/queues/place.queue', () => ({
     placeQueue: placeQueueMock
 }));
+jest.mock('@global/helpers/cloudinary-upload');
 
 describe('Create Place Controller Tests', () => {
     let req: { currentUser: AuthPayload | null | undefined; body: any; params: any };
@@ -41,6 +43,11 @@ describe('Create Place Controller Tests', () => {
 
     it('should create a place and return success response', async () => {
         const controller = new Create();
+        jest.spyOn(cloudinaryUploads, 'uploads').mockImplementation((): any => Promise.resolve({
+            version: '1234737373',
+            public_id: '123456'
+        }));
+        
         await controller.place(req as Request, res as Response);
 
         expect(mockedAxios.get).toHaveBeenCalled();

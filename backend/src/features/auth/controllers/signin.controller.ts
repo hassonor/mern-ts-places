@@ -16,7 +16,7 @@ export class SignInController {
     public async read(req: Request, res: Response): Promise<void> {
         const {email, username, password} = req.body;
         let existingUser: IAuthDocument;
-        
+
         if (email) {
             existingUser = await authService.getAuthUserByEmail(email);
         } else {
@@ -34,7 +34,7 @@ export class SignInController {
         const user: IUserDocument = await userService.getUserByAuthId(`${existingUser._id}`);
         const userJwt: string = JWT.sign(
             {
-                userId: user._id,
+                userId: user._id.toString(),
                 uId: existingUser.uId,
                 email: existingUser.email,
                 username: existingUser.username,

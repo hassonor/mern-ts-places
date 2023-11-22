@@ -56,7 +56,7 @@ export class SignupController {
 
     private signToken(data: IAuthDocument, userObjectId: ObjectId): string {
         return JWT.sign({
-            userId: userObjectId,
+            userId: userObjectId.toString(),
             uId: data.uId,
             email: data.email,
             username: data.username,

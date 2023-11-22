@@ -3,10 +3,12 @@ import HTTP_STATUS from 'http-status-codes';
 import { addPlaceSchema } from '@root/features/place/schemes/place.schemes';
 import { JoiValidation } from '@global/decorators/joi-validation.decorators';
 import { getCoordsForAddress } from '@global/helpers/location';
-import { NotFoundError } from '@global/helpers/error-handler';
+import { BadRequestError, NotFoundError } from '@global/helpers/error-handler';
 import { placeQueue } from '@service/queues/place.queue';
 import { ObjectId } from 'mongodb';
 import { IPlaceDocument } from '@place/interfaces/place.interface';
+import { UploadApiResponse } from 'cloudinary';
+import { uploads } from '@global/helpers/cloudinary-upload';
 
 
 export class Create {
@@ -22,11 +24,17 @@ export class Create {
         }
 
         const placeObjectId: ObjectId = new ObjectId();
+
+        const result: UploadApiResponse = await uploads(image, `${placeObjectId}`, true, true) as UploadApiResponse;
+        if (!result?.public_id) {
+            throw new BadRequestError('File upload: Error occurred. Try again.');
+        }
+
         const createdPlace: IPlaceDocument = {
             _id: placeObjectId,
             title,
             description,
-            image: image || 'https://images.lifestyleasia.com/wp-content/uploads/sites/7/2021/12/14223631/andres-iga-7XKkJVw1d8c-unsplash-1600x900.jpg',
+            image,
             location: coordinates,
             address,
             creator: req.currentUser!.userId

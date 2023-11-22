@@ -9,6 +9,7 @@ import { ObjectId } from 'mongodb';
 import { IPlaceDocument } from '@place/interfaces/place.interface';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads } from '@global/helpers/cloudinary-upload';
+import { config } from '@root/config';
 
 
 export class Create {
@@ -25,7 +26,7 @@ export class Create {
 
         const placeObjectId: ObjectId = new ObjectId();
 
-        const result: UploadApiResponse = await uploads(image, `${placeObjectId}`, true, true) as UploadApiResponse;
+        const result: UploadApiResponse = await uploads(image, `${req.currentUser!.userId}/${placeObjectId}`, true, true) as UploadApiResponse;
         if (!result?.public_id) {
             throw new BadRequestError('File upload: Error occurred. Try again.');
         }
@@ -34,11 +35,12 @@ export class Create {
             _id: placeObjectId,
             title,
             description,
-            image,
             location: coordinates,
             address,
             creator: req.currentUser!.userId
         } as unknown as IPlaceDocument;
+
+        createdPlace.image = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${req.currentUser!.userId}/${placeObjectId}`;
 
         placeQueue.addPlaceJob('addPlaceToDB', createdPlace);
 

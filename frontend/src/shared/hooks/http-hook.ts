@@ -15,7 +15,7 @@ export const useHttpClient = () => {
             url: string,
             method: Method = 'GET',
             body?: T,
-            headers?: AxiosRequestHeaders,
+            headers?: AxiosRequestHeaders | { Authorization: string },
         ): Promise<R> => {
             setIsLoading(true);
 
@@ -32,7 +32,6 @@ export const useHttpClient = () => {
                     url,
                     data: body,
                     headers: body instanceof FormData ? undefined : headers,
-                    withCredentials: true,
                     cancelToken: cancelTokenSource.token
                 });
                 return response.data as R;

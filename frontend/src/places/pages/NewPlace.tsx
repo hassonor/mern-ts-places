@@ -1,4 +1,4 @@
-import { FC, FormEvent, ReactElement } from "react";
+import { FC, FormEvent, ReactElement, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../../shared/components/FormElements/Input.tsx";
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/utils/validators.ts";
@@ -7,11 +7,15 @@ import { useForm } from "../../shared/hooks/form-hook.ts";
 import useHttpClient from "../../shared/hooks/http-hook.ts";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal.tsx";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.tsx";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload.tsx";
+import { AuthContext } from "../../shared/context/auth-context.ts";
 
 
 const NewPlace: FC = (): ReactElement => {
     const navigate = useNavigate();
     const {isLoading, error, sendRequest, clearError} = useHttpClient();
+
+    const {token} = useContext(AuthContext);
 
     const [formState, inputHandler] = useForm({
         title: {
@@ -25,6 +29,10 @@ const NewPlace: FC = (): ReactElement => {
         address: {
             value: '',
             isValid: false
+        },
+        image: {
+            value: null,
+            isValid: false
         }
     }, false);
 
@@ -35,10 +43,11 @@ const NewPlace: FC = (): ReactElement => {
         const placeData = {
             title: formState.inputs.title.value,
             description: formState.inputs.description.value,
-            address: formState.inputs.address.value
+            address: formState.inputs.address.value,
+            image: formState.inputs.image.value
         };
 
-        sendRequest('http://localhost:5000/api/v1/places', 'POST', placeData)
+        sendRequest('http://localhost:5000/api/v1/places', 'POST', placeData, {Authorization: `Bearer ${token}`})
             .then(() => {
                 navigate('/');
             })
@@ -64,6 +73,7 @@ const NewPlace: FC = (): ReactElement => {
                        validators={[VALIDATOR_REQUIRE()]}
                        errorText="Please enter a valid address."
                        onInput={inputHandler}/>
+                <ImageUpload id="image" onInput={inputHandler}/>
                 <Button type="submit" disabled={!formState.isValid}>ADD PLACE</Button>
             </form>
         </>

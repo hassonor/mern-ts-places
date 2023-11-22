@@ -200,10 +200,9 @@ describe('SignUp', () => {
             public_id: '123456'
         }));
 
-        // Call the function under test
         await SignupController.prototype.create(req, res);
 
-        expect(req.session?.jwt).toBeDefined();
+
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
             message: 'User were created successfully',

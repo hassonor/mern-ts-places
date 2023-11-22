@@ -61,7 +61,6 @@ const Auth: FC = () => {
         event.preventDefault();
 
         let userData;
-        console.log(formState.inputs);
         if (!isLoginMode) {
             userData = {
                 email: formState.inputs.email.value,

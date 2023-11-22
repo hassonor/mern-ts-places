@@ -63,7 +63,7 @@ const UpdatePlace: FC = () => {
             }
 
 
-            sendRequest(`http://localhost:5000/api/v1/places/${placeId}`, 'PATCH', updatedPlaceData)
+            sendRequest(`http://localhost:5000/api/v1/places/${placeId}`, 'PATCH', updatedPlaceData, {Authorization: `Bearer ${authCtx.token}`})
                 .then(() => {
                     navigate(`/${authCtx.userId}/places`);
                 })

@@ -15,9 +15,9 @@ export class Delete {
         if (!place) {
             throw new BadRequestError('Place not found, could not be deleted.');
         }
-        
+
         if (place?.creator.toString() !== req.currentUser!.userId) {
-            throw new NotAuthorizedError('You are not authorized to update this.');
+            throw new NotAuthorizedError('You are not authorized to delete this.');
         }
 
         placeQueue.addPlaceJob('deletePlaceInDB', {

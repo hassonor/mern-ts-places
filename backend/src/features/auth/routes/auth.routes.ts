@@ -1,7 +1,6 @@
 import express, { Router } from 'express';
 import { SignupController } from '@auth/controllers/signup.controller';
 import { SignInController } from '@auth/controllers/signin.controller';
-import { SignOutController } from '@auth/controllers/signout.controller';
 import { PasswordController } from '@auth/controllers/password.controller';
 import { Get } from '@auth/controllers/getUser.controller';
 
@@ -19,12 +18,6 @@ class AuthRoutes {
         this.router.post('/signin', SignInController.prototype.read);
         this.router.post('/forgot-password', PasswordController.prototype.create);
         this.router.post('/reset-password/:token', PasswordController.prototype.update);
-        return this.router;
-    }
-
-    public signoutRoute(): Router {
-        this.router.get('/signout', SignOutController.prototype.update);
-
         return this.router;
     }
 }

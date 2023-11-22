@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { authMock, authMockRequest, authMockResponse } from '@root/mocks/auth.mock';
-import { mergedAuthAndUserData } from '@root/mocks/user.mock';
 import { Request, Response } from 'express';
+import JWT from 'jsonwebtoken';
+import { config } from '@root/config';
 import { CustomError } from '@global/helpers/error-handler';
 import { SignInController } from '@auth/controllers/signin.controller';
 import { Helpers } from '@global/helpers/helpers';
 import { authService } from '@service/db/auth.service';
 import { userService } from '@service/db/user.service';
+import { authMock, authMockRequest, authMockResponse } from '@root/mocks/auth.mock';
+import { mergedAuthAndUserData } from '@root/mocks/user.mock';
 
 const USERNAME = 'Manny';
 const PASSWORD = 'manny1234567';
@@ -94,10 +96,11 @@ describe('SignIn', () => {
         });
     });
 
-    it('should throw "Invalid credentials" if password does not exist', () => {
+    it('should throw "Invalid credentials" if password does not match', () => {
         const req: Request = authMockRequest({}, {username: USERNAME, password: PASSWORD}) as Request;
         const res: Response = authMockResponse();
-        jest.spyOn(authService, 'getAuthUserByUsername').mockResolvedValueOnce(null as any);
+        jest.spyOn(authService, 'getAuthUserByUsername').mockResolvedValueOnce(authMock);
+        authMock.comparePassword = () => Promise.resolve(false);
 
         SignInController.prototype.read(req, res).catch((error: CustomError) => {
             expect(authService.getAuthUserByUsername).toHaveBeenCalledWith(Helpers.firstLetterUppercase(req.body.username));
@@ -106,7 +109,7 @@ describe('SignIn', () => {
         });
     });
 
-    it('should set session data for valid credentials and send correct json response', async () => {
+    it('should send correct json response with valid token for valid credentials', async () => {
         const req: Request = authMockRequest({}, {username: USERNAME, password: PASSWORD}) as Request;
         const res: Response = authMockResponse();
         authMock.comparePassword = () => Promise.resolve(true);
@@ -114,50 +117,25 @@ describe('SignIn', () => {
         jest.spyOn(userService, 'getUserByAuthId').mockResolvedValue(mergedAuthAndUserData);
 
         await SignInController.prototype.read(req, res);
-        expect(req.session?.jwt).toBeDefined();
+
+        // Generate the expected token
+        const expectedToken = JWT.sign(
+            {
+                userId: mergedAuthAndUserData._id.toString(),
+                uId: authMock.uId,
+                email: authMock.email,
+                username: authMock.username,
+            },
+            config.JWT_TOKEN!,
+            {expiresIn: config.TOKEN_EXPIRES_IN_HOURS}
+        );
+
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             message: 'User login successfully',
             user: mergedAuthAndUserData,
-            token: req.session?.jwt
+            token: expectedToken
         });
     });
 
-    it('should throw an error if email is not valid', () => {
-        const req: Request = authMockRequest({}, {email: 'invalid-email', password: PASSWORD}) as Request;
-        const res: Response = authMockResponse();
-        SignInController.prototype.read(req, res).catch((error: CustomError) => {
-            expect(error.statusCode).toEqual(400);
-            expect(error.serializeErrors().message).toEqual('Email must be valid');
-        });
-    });
-
-    it('should set session data for valid email credentials and send correct json response', async () => {
-        const req: Request = authMockRequest({}, {email: 'valid@email.com', password: PASSWORD}) as Request;
-        const res: Response = authMockResponse();
-        authMock.comparePassword = () => Promise.resolve(true);
-        jest.spyOn(authService, 'getAuthUserByEmail').mockResolvedValue(authMock);
-        jest.spyOn(userService, 'getUserByAuthId').mockResolvedValue(mergedAuthAndUserData);
-
-        await SignInController.prototype.read(req, res);
-        expect(req.session?.jwt).toBeDefined();
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({
-            message: 'User login successfully',
-            user: mergedAuthAndUserData,
-            token: req.session?.jwt
-        });
-    });
-
-    it('should throw "Invalid credentials" if email does not exist', () => {
-        const req: Request = authMockRequest({}, {email: 'nonexistent@email.com', password: PASSWORD}) as Request;
-        const res: Response = authMockResponse();
-        jest.spyOn(authService, 'getAuthUserByEmail').mockResolvedValueOnce(null as any);
-
-        SignInController.prototype.read(req, res).catch((error: CustomError) => {
-            expect(authService.getAuthUserByEmail).toHaveBeenCalledWith(req.body.email);
-            expect(error.statusCode).toEqual(400);
-            expect(error.serializeErrors().message).toEqual('Invalid credentials');
-        });
-    });
 });

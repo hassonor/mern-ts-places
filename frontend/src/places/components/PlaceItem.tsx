@@ -15,6 +15,7 @@ interface PlaceItemProps {
 }
 
 const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
+    const {token} = useContext(AuthContext);
     const {isLoading, error, sendRequest, clearError} = useHttpClient();
     const mapModalRef = useRef<ModalHandles>(null);
     const deleteModalRef = useRef<ModalHandles>(null);
@@ -40,7 +41,7 @@ const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
     const confirmDeletePlaceHandler = async () => {
         deleteModalRef.current?.close();
         try {
-            await sendRequest(`http://localhost:5000/api/v1/places/${place._id}`, 'DELETE')
+            await sendRequest(`http://localhost:5000/api/v1/places/${place._id}`, 'DELETE', null, {Authorization: `Bearer ${token}`})
             onDelete(place._id);
             deleteModalRef.current?.close();
         } catch (error) {
@@ -75,8 +76,7 @@ const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
                 </p>
             </Modal>
             <li className="flex justify-center my-4">
-                <Card
-                    className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl p-0">
+                <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl p-0">
                     {isLoading && <LoadingSpinner asOverlay/>}
                     <div className="w-full h-32 mr-6 lg:h-80">
                         <img src={place.image} alt={place.title} className="w-full h-full object-cover"/>
@@ -87,12 +87,16 @@ const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
                         <p className="mb-2 text-xs lg:text-sm">{place.description}</p>
                     </div>
                     <div
-                        className="pt-4 text-center border-t border-gray-300 pb-4 mx-2 sm:mx-4 md:mx-6 lg:mx-8 xl:mx-10">
-                        <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
-                        {authCtx.isLoggedIn && authCtx.userId === place.creator &&
-                            <Button to={`/places/${place._id}`}>EDIT</Button>}
-                        {authCtx.isLoggedIn && authCtx.userId === place.creator &&
-                            <Button danger onClick={openConfirmDeleteHandler}>DELETE</Button>}
+                        className="pt-4 text-center border-t border-gray-300 pb-4 mx-2 space-y-2 sm:space-y-0 sm:flex sm:justify-center">
+                        <Button inverse onClick={openMapHandler}>VIEW ON
+                            MAP</Button>
+                        {authCtx.isLoggedIn && authCtx.userId === place.creator && (
+                            <>
+                                <Button to={`/places/${place._id}`}>EDIT</Button>
+                                <Button danger
+                                        onClick={openConfirmDeleteHandler}>DELETE</Button>
+                            </>
+                        )}
                     </div>
                 </Card>
             </li>

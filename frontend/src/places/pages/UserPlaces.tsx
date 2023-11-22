@@ -16,7 +16,7 @@ const UserPlaces: FC = () => {
     useEffect(() => {
         const fetchPlaces = async () => {
             try {
-                const response = await sendRequest<TPlace[]>(`http://localhost:5000/api/v1/places/user/${userId}`) as unknown as TUserPlacesResponse;
+                const response = await sendRequest<TPlace[]>(`${import.meta.env.VITE_APP_BASE_BE_URL}/places/user/${userId}`) as unknown as TUserPlacesResponse;
                 setLoadedPlaces(response.places);
             } catch (err) {
                 // Error handling is managed by useHttpClient

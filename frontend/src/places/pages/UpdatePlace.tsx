@@ -33,7 +33,7 @@ const UpdatePlace: FC = () => {
     useEffect(() => {
         const fetchPlace = async () => {
             try {
-                const responseData = await sendRequest(`http://localhost:5000/api/v1/places/${placeId}`) as unknown as TPlaceByIdResponse
+                const responseData = await sendRequest(`${import.meta.env.VITE_APP_BASE_BE_URL}/places/${placeId}`) as unknown as TPlaceByIdResponse
                 setLoadedPlace(responseData.place);
                 setFormData({
                     title: {
@@ -63,7 +63,7 @@ const UpdatePlace: FC = () => {
             }
 
 
-            sendRequest(`http://localhost:5000/api/v1/places/${placeId}`, 'PATCH', updatedPlaceData, {Authorization: `Bearer ${authCtx.token}`})
+            sendRequest(`${import.meta.env.VITE_APP_BASE_BE_URL}/places/${placeId}`, 'PATCH', updatedPlaceData, {Authorization: `Bearer ${authCtx.token}`})
                 .then(() => {
                     navigate(`/${authCtx.userId}/places`);
                 })

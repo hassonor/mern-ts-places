@@ -47,7 +47,7 @@ const NewPlace: FC = (): ReactElement => {
             image: formState.inputs.image.value
         };
 
-        sendRequest('http://localhost:5000/api/v1/places', 'POST', placeData, {Authorization: `Bearer ${token}`})
+        sendRequest(`${import.meta.env.VITE_APP_BASE_BE_URL}/places`, 'POST', placeData, {Authorization: `Bearer ${token}`})
             .then(() => {
                 navigate('/');
             })

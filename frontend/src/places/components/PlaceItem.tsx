@@ -41,7 +41,7 @@ const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
     const confirmDeletePlaceHandler = async () => {
         deleteModalRef.current?.close();
         try {
-            await sendRequest(`http://localhost:5000/api/v1/places/${place._id}`, 'DELETE', null, {Authorization: `Bearer ${token}`})
+            await sendRequest(`${import.meta.env.VITE_APP_BASE_BE_URL}/places/places/${place._id}`, 'DELETE', null, {Authorization: `Bearer ${token}`})
             onDelete(place._id);
             deleteModalRef.current?.close();
         } catch (error) {

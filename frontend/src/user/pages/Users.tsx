@@ -13,7 +13,7 @@ const UsersPage: FC = (): ReactElement => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await sendRequest<TUsersResponse>('http://localhost:5000/api/v1/users') as unknown as TUsersResponse;
+                const response = await sendRequest<TUsersResponse>(`${import.meta.env.VITE_APP_BASE_BE_URL}/users`) as unknown as TUsersResponse;
                 setLoadedUsers(response.users);
             } catch (err) {
                 // Error handling is managed by useHttpClient

@@ -77,7 +77,7 @@ const Auth: FC = () => {
 
 
         const endpoint = isLoginMode ? 'signin' : 'signup';
-        sendRequest(`http://localhost:5000/api/v1/${endpoint}`, 'POST', userData)
+        sendRequest(`${import.meta.env.VITE_APP_BASE_BE_URL}/${endpoint}`, 'POST', userData)
             .then((response) => {
                 const userResponse = response as TUserResponse;
                 authCtx.login(userResponse.user._id, userResponse.token);

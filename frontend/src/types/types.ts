@@ -46,3 +46,20 @@ export type TPlaceByIdResponse = {
     message: string;
     place: TPlace;
 }
+
+export type TPaginationProps = {
+    currentPage: number;
+    totalPages: number;
+    limit: number;
+    onLimitChange: (limit: number) => void;
+    onPageChange: (page: number) => void;
+};
+
+
+export type TLimitOptions = 1 | 2 | 10 | 15 | 25 | 50 | 100;
+
+export interface ISearchParams {
+    request: {
+        url: string;
+    };
+}

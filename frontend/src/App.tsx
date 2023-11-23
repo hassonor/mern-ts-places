@@ -6,6 +6,7 @@ import { AuthContext } from "./shared/context/auth-context.ts";
 import PrivateRoute from "./shared/components/PrivateRoute.tsx";
 import { useAuth } from "./shared/hooks/auth-hook.ts";
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner.tsx";
+import { fetchUsersLoader } from "./shared/utils/http-requests.ts";
 
 
 const UsersPage = lazy(() => import("./user/pages/Users.tsx"));
@@ -23,7 +24,8 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <UsersPage/>
+                element: <UsersPage/>,
+                loader: ({request}) => fetchUsersLoader({request})
             },
             {
                 path: 'auth',

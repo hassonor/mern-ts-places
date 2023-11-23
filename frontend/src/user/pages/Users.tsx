@@ -1,38 +1,35 @@
-import { FC, ReactElement, useEffect, useState } from 'react';
+import { FC, ReactElement } from 'react';
+import { useLoaderData, useSearchParams } from "react-router-dom";
 import UsersList from "../components/UsersList.tsx";
-import { TUsersResponse, TUser } from "../../types/types.ts";
-import ErrorModal from "../../shared/components/UIElements/ErrorModal.tsx";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.tsx";
-import useHttpClient from "../../shared/hooks/http-hook.ts"; // Import useHttpClient
+import { TLimitOptions, TUsersResponse } from "../../types/types.ts";
+import Pagination from "../../shared/components/Navigation/Pagination.tsx";
 
 const UsersPage: FC = (): ReactElement => {
-    const {isLoading, error, sendRequest, clearError} = useHttpClient();
-    const [loadedUsers, setLoadedUsers] = useState<TUser[]>([]);
+    const {users, totalPages} = useLoaderData() as TUsersResponse;
+    const [searchParams, setSearchParams] = useSearchParams();
+    const currentPage = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '100') as TLimitOptions;
 
+    const handlePageChange = (newPage: number) => {
+        setSearchParams({page: newPage.toString(), limit: limit.toString()});
+    };
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await sendRequest<TUsersResponse>(`${import.meta.env.VITE_APP_BASE_BE_URL}/users`) as unknown as TUsersResponse;
-                setLoadedUsers(response.users);
-            } catch (err) {
-                // Error handling is managed by useHttpClient
-            }
-        };
-
-        fetchUsers();
-    }, [sendRequest]);
+    const handleLimitChange = (newLimit: LimitOptions) => {
+        setSearchParams({page: '1', limit: newLimit.toString()});
+    };
 
     return (
-        <div className="flex justify-center">
-            {error && <ErrorModal error={error} onClear={clearError}/>}
-            {isLoading ? (
-                <LoadingSpinner asOverlay/>
-            ) : (
-                <UsersList users={loadedUsers}/>
-            )}
+        <div className="flex flex-col items-center justify-center">
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                limit={limit}
+                onPageChange={handlePageChange}
+                onLimitChange={handleLimitChange}
+            />
+            <UsersList users={users}/>
         </div>
     );
-}
+};
 
 export default UsersPage;

@@ -24,3 +24,4 @@ idea
 *.sln
 *.sw?
 .env
+.env.production

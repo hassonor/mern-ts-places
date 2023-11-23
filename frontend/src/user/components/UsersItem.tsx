@@ -9,7 +9,7 @@ interface UserItemProps {
 }
 
 const UserItem: FC<UserItemProps> = ({user}): ReactElement => {
-
+    const placesCount = user.places ? user.places.length : 0;
 
     return (
         <li className="m-4 min-w-[17.5rem] max-w-[17.5rem]">
@@ -22,7 +22,7 @@ const UserItem: FC<UserItemProps> = ({user}): ReactElement => {
                     <div>
                         <h2 className="text-2xl m-0 font-normal text-red-500  hover:text-gray-800 active:text-gray-800">{user.username}</h2>
                         <h3 className="m-0">
-                            {user.places.length} {user.places.length === 1 ? 'Place' : 'Places'}
+                            {placesCount} {placesCount === 1 ? 'Place' : 'Places'}
                         </h3>
                     </div>
                 </Link>

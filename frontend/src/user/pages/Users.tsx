@@ -26,7 +26,11 @@ const UsersPage: FC = (): ReactElement => {
     return (
         <div className="flex justify-center">
             {error && <ErrorModal error={error} onClear={clearError}/>}
-            {isLoading && loadedUsers.length === 0 ? <LoadingSpinner asOverlay/> : <UsersList users={loadedUsers}/>}
+            {isLoading ? (
+                <LoadingSpinner asOverlay/>
+            ) : (
+                <UsersList users={loadedUsers}/>
+            )}
         </div>
     );
 }

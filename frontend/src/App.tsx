@@ -1,15 +1,19 @@
-import { ReactElement } from "react";
+import { lazy, ReactElement, Suspense } from "react";
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import RootLayout from "./shared/components/Root.tsx";
 import Error404 from "./shared/pages/Error404.tsx";
-import NewPlace from "./places/pages/NewPlace.tsx";
-import UsersPage from "./user/pages/Users.tsx";
-import UserPlaces from "./places/pages/UserPlaces.tsx";
-import UpdatePlace from "./places/pages/UpdatePlace.tsx";
-import AuthenticationPage from "./user/pages/AuthenticationPage.tsx";
 import { AuthContext } from "./shared/context/auth-context.ts";
 import PrivateRoute from "./shared/components/PrivateRoute.tsx";
 import { useAuth } from "./shared/hooks/auth-hook.ts";
+import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner.tsx";
+
+
+const UsersPage = lazy(() => import("./user/pages/Users.tsx"));
+const NewPlace = lazy(() => import("./places/pages/NewPlace.tsx"));
+const UserPlaces = lazy(() => import("./places/pages/UserPlaces.tsx"));
+const UpdatePlace = lazy(() => import("./places/pages/UpdatePlace.tsx"));
+const AuthenticationPage = lazy(() => import("./user/pages/AuthenticationPage.tsx"));
+
 
 const router = createBrowserRouter([
     {
@@ -53,7 +57,9 @@ function App(): ReactElement {
         <AuthContext.Provider value={{
             isLoggedIn: !!token, token: token, userId: userId, login: loginAction, logout: logoutAction
         }}>
-            <RouterProvider router={router}/>
+            <Suspense fallback={<LoadingSpinner/>}>
+                <RouterProvider router={router}/>
+            </Suspense>
         </AuthContext.Provider>)
 }
 

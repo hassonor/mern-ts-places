@@ -14,7 +14,7 @@ const UsersPage: FC = (): ReactElement => {
         setSearchParams({page: newPage.toString(), limit: limit.toString()});
     };
 
-    const handleLimitChange = (newLimit: LimitOptions) => {
+    const handleLimitChange = (newLimit: TLimitOptions) => {
         setSearchParams({page: '1', limit: newLimit.toString()});
     };
 

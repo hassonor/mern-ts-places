@@ -33,13 +33,14 @@ const NavLinks: FC<NavLinksProps> = ({onNavLinksClick}) => {
                             ? "border-black bg-yellow-300 text-black no-underline p-2"
                             : "border-transparent text-black no-underline p-2 hover:bg-yellow-300 hover:border-black hover:text-black"
                     }
+                    end
                 >
                     MY PLACES
                 </NavLink>
             </li>}
             {autCtx.isLoggedIn && <li className="m-4 lg:mx-2">
                 <NavLink
-                    to="places/new"
+                    to={`${autCtx.userId}/places/new`}
                     onClick={onNavLinksClick}
                     className={({isActive}) =>
                         isActive

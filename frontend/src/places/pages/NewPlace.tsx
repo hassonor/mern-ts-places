@@ -49,7 +49,7 @@ const NewPlace: FC = (): ReactElement => {
 
         sendRequest(`${import.meta.env.VITE_APP_BASE_BE_URL}/places`, 'POST', placeData, {Authorization: `Bearer ${token}`})
             .then(() => {
-                navigate('/');
+                navigate(-1);
             })
             .catch(() => {
                 // Error handling is managed by useHttpClient, but additional actions can be performed here if needed
@@ -75,7 +75,9 @@ const NewPlace: FC = (): ReactElement => {
                        onInput={inputHandler}/>
                 <ImageUpload id="image" onInput={inputHandler}/>
                 <Button type="submit" disabled={!formState.isValid}>ADD PLACE</Button>
+                <Button to='..' relative='path' inverse>BACK</Button>
             </form>
+
         </>
     )
 }

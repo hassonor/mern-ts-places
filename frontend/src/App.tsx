@@ -26,19 +26,19 @@ const router = createBrowserRouter([
                 element: <UsersPage/>
             },
             {
-                path: ':userId/places',
-                element: <UserPlaces/>
-            },
-            {
                 path: 'auth',
                 element: <AuthenticationPage/>
             },
             {
-                path: 'places/new',
+                path: ':userId/places',
+                element: <UserPlaces/>
+            },
+            {
+                path: ':userId/places/new',
                 element: <PrivateRoute><NewPlace/></PrivateRoute>,
             },
             {
-                path: 'places/:placeId',
+                path: ':userId/places/:placeId',
                 element: <PrivateRoute><UpdatePlace/></PrivateRoute>,
             },
         ]

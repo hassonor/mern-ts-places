@@ -9,6 +9,7 @@ interface ButtonProps {
     disabled?: boolean;
     inverse?: boolean;
     danger?: boolean;
+    relative?: Parameters<typeof Link>[0]['relative'];
     size?: 'small' | 'big' | 'default';
     children: ReactNode;
 }
@@ -26,6 +27,7 @@ const Button: React.FC<ButtonProps> = (props) => {
     }
 
     const sizeClasses = props.size === 'small' ? 'text-sm' : props.size === 'big' ? 'text-xl' : 'text-base';
+    const linkProps = props.relative ? {relative: props.relative} : {};
 
     if (props.href) {
         return (
@@ -43,6 +45,7 @@ const Button: React.FC<ButtonProps> = (props) => {
             <Link
                 to={props.to}
                 className={`${baseClasses} ${buttonColorClasses} ${sizeClasses}`}
+                {...linkProps}
             >
                 {props.children}
             </Link>

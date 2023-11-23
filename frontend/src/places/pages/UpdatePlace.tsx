@@ -126,6 +126,7 @@ const UpdatePlace: FC = () => {
                         initialValid={true}
                     />
                     <Button type="submit" disabled={!formState.isValid}>UPDATE PLACE</Button>
+                    <Button to='..' relative='path' inverse>BACK</Button>
                 </form>)}
         </>)
 }

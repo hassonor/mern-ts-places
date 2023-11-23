@@ -1,13 +1,14 @@
 import { FC, useEffect, useState } from "react";
 import { TPlace, TUserPlacesResponse } from "../../types/types.ts";
 import PlaceList from "../components/PlaceList.tsx";
-import { useParams } from "react-router-dom";
+import { useParams, useLoaderData } from "react-router-dom";
 import useHttpClient from "../../shared/hooks/http-hook.ts";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal.tsx";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.tsx";
 
 
 const UserPlaces: FC = () => {
+
     const {isLoading, error, sendRequest, clearError} = useHttpClient();
     const [loadedPlaces, setLoadedPlaces] = useState<TPlace[]>([]);
 

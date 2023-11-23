@@ -4,11 +4,16 @@ import UsersList from "../components/UsersList.tsx";
 import { TLimitOptions, TUsersResponse } from "../../types/types.ts";
 import Pagination from "../../shared/components/Navigation/Pagination.tsx";
 
+
 const UsersPage: FC = (): ReactElement => {
-    const {users, totalPages} = useLoaderData() as TUsersResponse;
+    const response = useLoaderData() as unknown as any;
+    const {users, totalPages} = response.data as unknown as TUsersResponse;
     const [searchParams, setSearchParams] = useSearchParams();
+
+
     const currentPage = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '100') as TLimitOptions;
+
 
     const handlePageChange = (newPage: number) => {
         setSearchParams({page: newPage.toString(), limit: limit.toString()});

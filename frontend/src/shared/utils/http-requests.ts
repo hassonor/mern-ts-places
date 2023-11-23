@@ -1,7 +1,8 @@
 import axios from "axios";
-import { ISearchParams, TUsersResponse } from "../../types/types.ts";
+import { json } from 'react-router-dom';
+import { ISearchParams } from "../../types/types.ts";
 
-export async function fetchUsersLoader(search: ISearchParams): Promise<TUsersResponse> {
+export async function fetchUsersLoader(search: ISearchParams): Promise<any> {
     try {
         // Extracting the URL from the search object
         const url = new URL(search.request.url);
@@ -9,8 +10,28 @@ export async function fetchUsersLoader(search: ISearchParams): Promise<TUsersRes
         const queryString = url.search;
 
         const response = await axios.get(`${import.meta.env.VITE_APP_BASE_BE_URL}/users${queryString}`);
-        return response.data as TUsersResponse;
+
+        if (response.status !== 200) {
+            return json({message: 'Failed to load users'}, {status: 500});
+        }
+
+        return response
     } catch (error) {
         throw new Error('Failed to load users');
+    }
+}
+
+export async function fetchUserPlacesLoader({request, params}): Promise<any> {
+    try {
+        const userId = params.userId;
+        const response = await axios.get(`${import.meta.env.VITE_APP_BASE_BE_URL}/places/user/${userId}`);
+
+        if (response.status !== 200) {
+            return json({message: 'Failed to load places for this user'}, {status: 500});
+        }
+
+        return response
+    } catch (error) {
+        throw new Error('Failed to load places');
     }
 }

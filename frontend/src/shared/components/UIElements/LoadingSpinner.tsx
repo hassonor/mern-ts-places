@@ -5,10 +5,9 @@ interface LoadingSpinnerProps {
 }
 
 const LoadingSpinner: FC<LoadingSpinnerProps> = ({asOverlay = false}) => {
-
     const overlayClasses = asOverlay
-        ? 'fixed inset-0 bg-white bg-opacity-90 flex justify-center items-center'
-        : '';
+        ? 'fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50' //
+        : 'flex justify-center items-center';
 
     return (
         <div className={overlayClasses}>

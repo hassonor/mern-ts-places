@@ -3,11 +3,12 @@ import { useLoaderData, useSearchParams } from "react-router-dom";
 import UsersList from "../components/UsersList.tsx";
 import { TLimitOptions, TUsersResponse } from "../../types/types.ts";
 import Pagination from "../../shared/components/Navigation/Pagination.tsx";
+import { AxiosResponse } from "axios";
 
 
 const UsersPage: FC = (): ReactElement => {
-    const response = useLoaderData() as unknown as any;
-    const {users, totalPages} = response.data as unknown as TUsersResponse;
+    const response = useLoaderData() as AxiosResponse<TUsersResponse>;
+    const {users, totalPages} = response.data;
     const [searchParams, setSearchParams] = useSearchParams();
 
 

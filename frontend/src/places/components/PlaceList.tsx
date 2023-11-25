@@ -7,12 +7,13 @@ import { AuthContext } from "../../shared/context/auth-context.ts";
 
 interface PlaceListProps {
     places: TPlace[];
-    onDelete: (deletedPlaceId: string) => void
+    onDelete?: (deletedPlaceId: string) => void
 }
 
 const PlaceList: FC<PlaceListProps> = ({places, onDelete}) => {
     const {userId} = useContext(AuthContext);
     
+
     if (places.length === 0) {
         return (
             <div className="mx-auto p-1 w-8/10 max-w-xl">

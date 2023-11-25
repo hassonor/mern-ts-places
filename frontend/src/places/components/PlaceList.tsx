@@ -7,12 +7,11 @@ import { AuthContext } from "../../shared/context/auth-context.ts";
 
 interface PlaceListProps {
     places: TPlace[];
-    onDelete?: (deletedPlaceId: string) => void
 }
 
-const PlaceList: FC<PlaceListProps> = ({places, onDelete}) => {
+const PlaceList: FC<PlaceListProps> = ({places}) => {
     const {userId} = useContext(AuthContext);
-    
+
 
     if (places.length === 0) {
         return (
@@ -27,7 +26,7 @@ const PlaceList: FC<PlaceListProps> = ({places, onDelete}) => {
     return (
         <ul className="list-none mx-auto p-0 w-9/10 max-w-xl">
             {places.map((place) => (
-                <PlaceItem key={place._id} place={place} onDelete={onDelete}/>
+                <PlaceItem key={place._id} place={place}/>
             ))}
         </ul>
     );

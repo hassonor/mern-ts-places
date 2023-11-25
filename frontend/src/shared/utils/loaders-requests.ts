@@ -21,7 +21,7 @@ export async function fetchUsersLoader(search: ISearchParams): Promise<any> {
     }
 }
 
-export async function fetchUserPlacesLoader({request, params}): Promise<any> {
+export async function fetchUserPlacesLoader({params}): Promise<any> {
     try {
         const userId = params.userId;
         const response = await axios.get(`${import.meta.env.VITE_APP_BASE_BE_URL}/places/user/${userId}`);
@@ -33,5 +33,20 @@ export async function fetchUserPlacesLoader({request, params}): Promise<any> {
         return response
     } catch (error) {
         throw new Error('Failed to load places');
+    }
+}
+
+export async function fetchUserPlaceByIdLoader({params}): Promise<any> {
+    try {
+        const {placeId} = params;
+        const response = await axios.get(`${import.meta.env.VITE_APP_BASE_BE_URL}/places/${placeId}`);
+
+        if (response.status !== 200) {
+            return json({message: 'Failed to load place details'}, {status: 500});
+        }
+
+        return response
+    } catch (error) {
+        throw new Error('Failed to load place details');
     }
 }

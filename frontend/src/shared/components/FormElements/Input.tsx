@@ -71,6 +71,7 @@ const Input: FC<InputProps> = (props) => {
                 id={props.id}
                 className={`block w-full bg-gray-100 border border-gray-300 p-1 ${!inputState.isValid && inputState.isTouched && 'border-red-500 bg-red-200'}`}
                 type={props.type || 'text'}
+                name={props.id}
                 placeholder={props.placeholder}
                 onChange={changeHandler}
                 onBlur={touchHandler}
@@ -81,6 +82,7 @@ const Input: FC<InputProps> = (props) => {
                 id={props.id}
                 className={`block w-full bg-gray-100 border border-gray-300 p-1 ${!inputState.isValid && inputState.isTouched && 'border-red-500 bg-red-200'}`}
                 rows={props.rows || 3}
+                name={props.id}
                 onChange={changeHandler}
                 onBlur={touchHandler}
                 value={inputState.value}

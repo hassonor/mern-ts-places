@@ -2,15 +2,15 @@ import React, { FC, useState, useRef } from 'react';
 import Button from './Button';
 
 interface ImageUploadProps {
-    id: string;
-    center?: boolean;
-    onInput: (id: string, fileBase64: string | null, isValid: boolean) => void;
+    id: string,
+    center?: boolean,
+    onInput: (id: string, fileBase64: string | null, isValid: boolean) => void,
 }
 
 const ImageUpload: FC<ImageUploadProps> = ({id, center, onInput}) => {
+    const [base64File, setBase64File] = useState<string | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isValid, setIsValid] = useState<boolean | null>(null);
-
     const filePickerRef = useRef<HTMLInputElement>(null);
 
     const convertToBase64 = (file: File) => {
@@ -18,8 +18,14 @@ const ImageUpload: FC<ImageUploadProps> = ({id, center, onInput}) => {
         fileReader.onload = () => {
             const base64String = fileReader.result as string;
             setPreviewUrl(base64String);
+            setBase64File(base64String);  // Update base64File state
             setIsValid(true);
             onInput(id, base64String, true);
+        };
+        fileReader.onerror = (error) => {
+            console.error('Error converting file to base64:', error);
+            setIsValid(false);
+            onInput(id, null, false);
         };
         fileReader.readAsDataURL(file);
     };
@@ -57,6 +63,12 @@ const ImageUpload: FC<ImageUploadProps> = ({id, center, onInput}) => {
                     <p>No image selected</p>
                 )}
             </div>
+            <input
+                name="base64File"
+                value={base64File || ''}
+                hidden
+                readOnly
+            />
             <Button type="button" onClick={pickImageHandler}>UPLOAD IMAGE</Button>
             {isValid === false && (
                 <p className="text-red-500">Please pick a valid image</p>

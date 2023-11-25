@@ -1,22 +1,18 @@
 import { FC, useContext, useRef } from "react";
+import { useSubmit } from "react-router-dom";
 import { TPlace } from "../../types/types";
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal, { ModalHandles } from "../../shared/components/UIElements/Modal";
 import GoogleMap from "../../shared/components/UIElements/GoogleMap.tsx";
 import { AuthContext } from "../../shared/context/auth-context.ts";
-import useHttpClient from "../../shared/hooks/http-hook.ts";
-import ErrorModal from "../../shared/components/UIElements/ErrorModal.tsx";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.tsx";
 
 interface PlaceItemProps {
     place: TPlace;
-    onDelete: (deletedPlaceId: string) => void
 }
 
-const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
-    const {token} = useContext(AuthContext);
-    const {isLoading, error, sendRequest, clearError} = useHttpClient();
+const PlaceItem: FC<PlaceItemProps> = ({place}) => {
+    const submit = useSubmit();
     const mapModalRef = useRef<ModalHandles>(null);
     const deleteModalRef = useRef<ModalHandles>(null);
 
@@ -40,18 +36,11 @@ const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
 
     const confirmDeletePlaceHandler = async () => {
         deleteModalRef.current?.close();
-        try {
-            await sendRequest(`${import.meta.env.VITE_APP_BASE_BE_URL}/places/${place._id}`, 'DELETE', null, {Authorization: `Bearer ${token}`})
-            onDelete(place._id);
-            deleteModalRef.current?.close();
-        } catch (error) {
-            console.error("Error deleting place:", error);
-        }
+        submit({placeId: place._id}, {method: 'delete'})
     };
 
     return (
         <>
-            <ErrorModal error={error} onClear={clearError}/>
             <Modal
                 ref={mapModalRef}
                 title={<h2 className="font-extrabold text-lg">{place.address}</h2>}
@@ -77,7 +66,6 @@ const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
             </Modal>
             <li className="flex justify-center my-4">
                 <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl p-0">
-                    {isLoading && <LoadingSpinner asOverlay/>}
                     <div className="w-full h-32 mr-6 lg:h-80">
                         <img src={place.image} alt={place.title} className="w-full h-full object-cover"/>
                     </div>

@@ -115,7 +115,7 @@ describe('Get Places Controller', () => {
     // Test for handling no places found for a user ID
     it('should handle no places found for a user ID', async () => {
         req.params = {userId: 'testUserId'};
-        (placeService.placesByUserId as jest.Mock).mockResolvedValueOnce([]);
+        (placeService.placesByUserId as jest.Mock).mockResolvedValueOnce(undefined);
 
         await expect(getController.placesByUserId(req as Request, res as Response)).rejects.toThrow(
             new NotFoundError('Could not find places for the user id.')

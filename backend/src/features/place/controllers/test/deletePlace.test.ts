@@ -77,7 +77,7 @@ describe('Delete Place Controller Tests', () => {
         const controller = new Delete();
 
         await expect(controller.place(req as Request, res as Response))
-            .rejects.toThrow('You are not authorized to update this.');
+            .rejects.toThrow('You are not authorized to delete this.');
 
         expect(mockGetPlaceById).toHaveBeenCalledWith('123');
         expect(placeQueue.addPlaceJob).not.toHaveBeenCalled();

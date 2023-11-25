@@ -10,7 +10,7 @@ import UserPlaces from "./places/pages/UserPlaces.tsx";
 import NewPlace from "./places/pages/NewPlace.tsx";
 import UpdatePlace from "./places/pages/UpdatePlace.tsx";
 import CustomErrorPage from "./shared/pages/CustomError.tsx";
-import { addNewPlaceAction, deletePlaceAction, updatePlaceAction } from "./shared/utils/actions-requests.ts";
+import PrivateRoute from "./shared/components/PrivateRoute.tsx";
 
 
 const router = createBrowserRouter([
@@ -32,18 +32,15 @@ const router = createBrowserRouter([
                 path: ':userId/places',
                 element: <UserPlaces/>,
                 loader: fetchUserPlacesLoader,
-                action: deletePlaceAction
             },
             {
                 path: ':userId/places/new',
-                element: <NewPlace/>,
-                action: addNewPlaceAction
+                element: <PrivateRoute><NewPlace/></PrivateRoute>
             },
             {
                 path: ':userId/places/:placeId',
-                element: <UpdatePlace/>,
+                element: <PrivateRoute><UpdatePlace/></PrivateRoute>,
                 loader: fetchUserPlaceByIdLoader,
-                action: updatePlaceAction
             },
         ]
     },

@@ -4,7 +4,7 @@ import { SignInController } from '@auth/controllers/signin.controller';
 import { PasswordController } from '@auth/controllers/password.controller';
 import { Get } from '@user/controllers/getUser.controller';
 
-class AuthRoutes {
+class UserRoutes {
     private router: Router;
 
     constructor() {
@@ -13,13 +13,8 @@ class AuthRoutes {
 
     public routes(): Router {
         this.router.get('/users', Get.prototype.users);
-
-        this.router.post('/signup', SignupController.prototype.create);
-        this.router.post('/signin', SignInController.prototype.read);
-        this.router.post('/forgot-password', PasswordController.prototype.create);
-        this.router.post('/reset-password/:token', PasswordController.prototype.update);
         return this.router;
     }
 }
 
-export const authRoutes: AuthRoutes = new AuthRoutes();
+export const userRoutes: UserRoutes = new UserRoutes();

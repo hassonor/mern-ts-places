@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
-import { Get as UserController } from '@auth/controllers/getUser.controller';
+import { Get as UserController } from '@user/controllers/getUser.controller';
 import { userService } from '@service/db/user.service';
 import { existingUser } from '@root/mocks/user.mock'; // Adjust the import path as needed
 
@@ -41,7 +41,10 @@ describe('Get Users Controller Tests', () => {
     it('should apply custom pagination when specified', async () => {
         req.query = {page: '2', limit: '20'};
         const mockTotal = 20;
-        jest.spyOn(userService, 'getAllUsers').mockResolvedValue({users: Array(20).fill(existingUser), total: mockTotal});
+        jest.spyOn(userService, 'getAllUsers').mockResolvedValue({
+            users: Array(20).fill(existingUser),
+            total: mockTotal
+        });
 
         await userController.users(req as Request, res as Response);
 
@@ -78,7 +81,10 @@ describe('Get Users Controller Tests', () => {
     it('should retrieve users with custom limit when limit is specified', async () => {
         req.query = {limit: '50'};
         const mockTotal = 100;
-        jest.spyOn(userService, 'getAllUsers').mockResolvedValue({users: Array(50).fill(existingUser), total: mockTotal});
+        jest.spyOn(userService, 'getAllUsers').mockResolvedValue({
+            users: Array(50).fill(existingUser),
+            total: mockTotal
+        });
 
         await userController.users(req as Request, res as Response);
 
@@ -114,7 +120,10 @@ describe('Get Users Controller Tests', () => {
     it('should handle empty filter parameter', async () => {
         req.query = {filter: '{}'};
         const mockTotal = 3;
-        jest.spyOn(userService, 'getAllUsers').mockResolvedValue({users: Array(3).fill(existingUser), total: mockTotal});
+        jest.spyOn(userService, 'getAllUsers').mockResolvedValue({
+            users: Array(3).fill(existingUser),
+            total: mockTotal
+        });
 
         await userController.users(req as Request, res as Response);
 

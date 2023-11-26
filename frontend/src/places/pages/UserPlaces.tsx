@@ -7,7 +7,6 @@ import { AxiosResponse } from "axios";
 
 const UserPlaces: FC = () => {
     const response = useLoaderData() as AxiosResponse<TUserPlacesResponse>;
-    console.log(response);
     const {places, totalPages} = response.data;
     const [searchParams, setSearchParams] = useSearchParams();
     const {userId} = useParams();

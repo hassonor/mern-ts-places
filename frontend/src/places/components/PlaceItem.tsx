@@ -11,7 +11,7 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.ts
 
 interface PlaceItemProps {
     place: TPlace;
-    onDelete: (deletedPlaceId: string) => void
+    onDelete: () => void
 }
 
 const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
@@ -42,7 +42,7 @@ const PlaceItem: FC<PlaceItemProps> = ({place, onDelete}) => {
         deleteModalRef.current?.close();
         try {
             await sendRequest(`${import.meta.env.VITE_APP_BASE_BE_URL}/places/${place._id}`, 'DELETE', null, {Authorization: `Bearer ${token}`})
-            onDelete(place._id);
+            onDelete();
             deleteModalRef.current?.close();
         } catch (error) {
             console.error("Error deleting place:", error);

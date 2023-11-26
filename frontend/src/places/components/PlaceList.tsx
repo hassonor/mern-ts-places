@@ -6,7 +6,7 @@ import { FC } from "react";
 
 interface PlaceListProps {
     places: TPlace[];
-    onDelete: (deletedPlaceId: string) => void
+    onDelete: () => void
 }
 
 const PlaceList: FC<PlaceListProps> = ({places, onDelete}) => {

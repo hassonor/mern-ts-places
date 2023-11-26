@@ -1,44 +1,47 @@
-import { FC, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { TPlace, TUserPlacesResponse } from "../../types/types.ts";
+import Pagination from "../../shared/components/Navigation/Pagination.tsx";
+import { useLoaderData, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { TUserPlacesResponse } from "../../types/types.ts";
+import { FC } from "react";
 import PlaceList from "../components/PlaceList.tsx";
-import useHttpClient from "../../shared/hooks/http-hook.ts";
-import ErrorModal from "../../shared/components/UIElements/ErrorModal.tsx";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.tsx";
+import { AxiosResponse } from "axios";
 
 const UserPlaces: FC = () => {
-    const {isLoading, error, sendRequest, clearError} = useHttpClient();
-    const [loadedPlaces, setLoadedPlaces] = useState<TPlace[]>([]);
-    const userId = useParams().userId;
+    const response = useLoaderData() as AxiosResponse<TUserPlacesResponse>;
+    console.log(response);
+    const {places, totalPages} = response.data;
+    const [searchParams, setSearchParams] = useSearchParams();
+    const {userId} = useParams();
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchPlaces = async () => {
-            try {
-                const response = await sendRequest<TPlace[]>(`${import.meta.env.VITE_APP_BASE_BE_URL}/places/user/${userId}`) as unknown as TUserPlacesResponse;
-                setLoadedPlaces(response.places);
-            } catch (err) {
-                // Error handling
-            }
-        };
+    const currentPage = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
 
-        // Trigger fetchPlaces when 'refresh' query param is 'true' or when userId changes
+    const handlePageChange = (newPage: number) => {
+        setSearchParams({page: newPage.toString(), limit: limit.toString()});
+    };
 
-        fetchPlaces();
+    const handleLimitChange = (newLimit: number) => {
+        setSearchParams({page: '1', limit: newLimit.toString()});
+    };
 
-    }, [sendRequest, userId]);
-
-
-    const placeDeleteHandler = async (deletedPlaceId: string) => {
-        setLoadedPlaces(prevPlaces => prevPlaces.filter(place => place._id !== deletedPlaceId));
-    }
+    const placeDeleteHandler = async () => {
+        navigate(`/${userId}/places?page=${currentPage}&limit=${limit}`);
+    };
 
     return (
-        <>
-            {error && <ErrorModal error={error} onClear={clearError}/>}
-            {isLoading && <div className="mx-auto p-1 w-8/10 max-w-xl"><LoadingSpinner/></div>}
-            {!isLoading && loadedPlaces && <PlaceList places={loadedPlaces} onDelete={placeDeleteHandler}/>}
-        </>
+        <div>
+            <div className="flex flex-col items-center justify-center">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    limit={limit}
+                    onPageChange={handlePageChange}
+                    onLimitChange={handleLimitChange}
+                />
+            </div>
+            <PlaceList places={places} onDelete={placeDeleteHandler}/>
+        </div>
     );
-}
+};
 
 export default UserPlaces;

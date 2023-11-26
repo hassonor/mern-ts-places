@@ -10,7 +10,7 @@ const RootLayout: FC = (): ReactElement => {
         <>
             <MainNavigation/>
             <main className={`pt-[5rem] ${navigation.state === 'loading' ? 'relative' : ''}`}>
-                {navigation.state === 'loading' && <LoadingSpinner asOverlay={true}/>}
+                {navigation.state === 'loading' && <LoadingSpinner asOverlay/>}
                 <Outlet/>
             </main>
         </>

@@ -37,9 +37,13 @@ export type TPlace = {
     }
 }
 
+
 export type TUserPlacesResponse = {
     message: string;
     places: TPlace[];
+    total: number;
+    currentPage: number;
+    totalPages: number;
 }
 
 export type TPlaceByIdResponse = {

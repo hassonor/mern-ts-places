@@ -36,16 +36,30 @@ export class Get {
         res.status(HTTP_STATUS.OK).json({message: 'Place found', place: place});
     }
 
-    // TODO: Add server side pagination,sorting and filtering
     public async placesByUserId(req: Request, res: Response): Promise<void> {
-        const userId = req.params.userId;
+        try {
+            const userId = req.params.userId;
+            if (!userId) throw new NotFoundError('User ID is required');
 
-        const places = await placeService.placesByUserId(userId);
+            const {page, limit, sortString, filterString} = Helpers.getQueryParamsWithPagination(req, 25);
+            const sort: PlaceSort = sortString ? JSON.parse(sortString) : {};
+            const filter = filterString ? JSON.parse(filterString) : {};
 
-        if (!places || places.length === 0) {
-            throw new NotFoundError('Could not find places for the user id.');
+            const {places, total} = await placeService.getAllPlacesByUserId(userId, page, limit, sort, filter);
+
+            res.status(HTTP_STATUS.OK).json({
+                message: 'User places list',
+                places,
+                total,
+                currentPage: page,
+                totalPages: Math.ceil(total / limit)
+            });
+        } catch (error) {
+            if (error instanceof NotFoundError) {
+                res.status(HTTP_STATUS.NOT_FOUND).json({message: error.message});
+            } else {
+                res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: 'Internal Server Error'});
+            }
         }
-
-        res.status(HTTP_STATUS.OK).json({message: 'User places found', places: places});
     }
 }

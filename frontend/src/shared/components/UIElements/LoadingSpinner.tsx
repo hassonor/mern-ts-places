@@ -4,7 +4,7 @@ interface LoadingSpinnerProps {
     asOverlay?: boolean;
 }
 
-const LoadingSpinner: FC<LoadingSpinnerProps> = ({asOverlay = false}) => {
+const LoadingSpinner: FC<LoadingSpinnerProps> = ({asOverlay = true}) => {
     const overlayClasses = asOverlay
         ? 'fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50' //
         : 'flex justify-center items-center';

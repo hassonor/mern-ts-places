@@ -21,16 +21,21 @@ export async function fetchUsersLoader(search: ISearchParams): Promise<any> {
     }
 }
 
-export async function fetchUserPlacesLoader({params}): Promise<any> {
+export async function fetchUserPlacesLoader({params, request}): Promise<any> {
     try {
+        const url = new URL(request.url);
+        const searchParams = new URLSearchParams(url.search);
+        const page = searchParams.get('page') || '1';
+        const limit = searchParams.get('limit') || '10';
         const userId = params.userId;
-        const response = await axios.get(`${import.meta.env.VITE_APP_BASE_BE_URL}/places/user/${userId}`);
+
+        const response = await axios.get(`${import.meta.env.VITE_APP_BASE_BE_URL}/places/user/${userId}?page=${page}&limit=${limit}`);
 
         if (response.status !== 200) {
-            return json({message: 'Failed to load places for this user'}, {status: 500});
+            throw new Error('Failed to load places');
         }
 
-        return response
+        return response;
     } catch (error) {
         throw new Error('Failed to load places');
     }

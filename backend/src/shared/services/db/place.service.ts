@@ -22,9 +22,29 @@ class PlaceService {
         return updatedPlace;
     }
 
-    public async placesByUserId(userId: string): Promise<IPlaceDocument[]> {
-        const places = await PlaceModel.find({creator: userId}).exec();
-        return places;
+    public async getAllPlacesByUserId(
+        userId: string,
+        page: number,
+        limit: number,
+        sort: PlaceSort = {},
+        filter: FilterQuery<IPlaceDocument> = {}
+    ): Promise<{
+        places: IPlaceDocument[],
+        total: number
+    }> {
+        const skip = (page - 1) * limit;
+        const query = PlaceModel.find({...filter, creator: userId});
+        const total = await PlaceModel.countDocuments({...filter, creator: userId});
+
+        query.skip(skip).limit(limit);
+
+        if (Object.keys(sort).length) {
+            query.sort(sort);
+        }
+
+        const places = await query.exec();
+
+        return {places, total};
     }
 
     public async deletePlace(userId: string, placeId: string): Promise<void> {

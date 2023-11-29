@@ -37,6 +37,13 @@ export type TPlace = {
     }
 }
 
+export type TNewPlaceData = {
+    title: string,
+    description: string,
+    address: string,
+    image: string
+}
+
 
 export type TUserPlacesResponse = {
     message: string;

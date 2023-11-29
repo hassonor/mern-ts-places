@@ -7,6 +7,7 @@ import PrivateRoute from "./shared/components/PrivateRoute.tsx";
 import { useAuth } from "./shared/hooks/auth-hook.ts";
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner.tsx";
 import { fetchUserPlacesLoader, fetchUsersLoader } from "./shared/utils/loaders-requests.ts";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 
 const UsersPage = lazy(() => import("./user/pages/Users.tsx"));
@@ -15,6 +16,7 @@ const UserPlaces = lazy(() => import("./places/pages/UserPlaces.tsx"));
 const UpdatePlace = lazy(() => import("./places/pages/UpdatePlace.tsx"));
 const AuthenticationPage = lazy(() => import("./user/pages/AuthenticationPage.tsx"));
 
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
     {
@@ -58,13 +60,15 @@ function App(): ReactElement {
 
 
     return (
-        <AuthContext.Provider value={{
-            isLoggedIn: !!token, token: token, userId: userId, login: loginAction, logout: logoutAction
-        }}>
-            <Suspense fallback={<LoadingSpinner/>}>
-                <RouterProvider router={router}/>
-            </Suspense>
-        </AuthContext.Provider>)
+        <QueryClientProvider client={queryClient}>
+            <AuthContext.Provider value={{
+                isLoggedIn: !!token, token: token, userId: userId, login: loginAction, logout: logoutAction
+            }}>
+                <Suspense fallback={<LoadingSpinner/>}>
+                    <RouterProvider router={router}/>
+                </Suspense>
+            </AuthContext.Provider>
+        </QueryClientProvider>);
 }
 
 export default App;

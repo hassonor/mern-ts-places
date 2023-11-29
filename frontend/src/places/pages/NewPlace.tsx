@@ -1,21 +1,32 @@
-import { FC, FormEvent, ReactElement, useContext } from "react";
+import { FC, FormEvent, ReactElement, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Input from "../../shared/components/FormElements/Input.tsx";
-import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/utils/validators.ts";
-import Button from "../../shared/components/FormElements/Button.tsx";
-import { useForm } from "../../shared/hooks/form-hook.ts";
-import useHttpClient from "../../shared/hooks/http-hook.ts";
-import ErrorModal from "../../shared/components/UIElements/ErrorModal.tsx";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner.tsx";
-import ImageUpload from "../../shared/components/FormElements/ImageUpload.tsx";
-import { AuthContext } from "../../shared/context/auth-context.ts";
-
+import { useMutation } from '@tanstack/react-query';
+import Input from "../../shared/components/FormElements/Input";
+import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/utils/validators";
+import Button from "../../shared/components/FormElements/Button";
+import { useForm } from "../../shared/hooks/form-hook";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
+import { AuthContext } from "../../shared/context/auth-context";
+import { createNewPlace } from "../../shared/utils/http-requests";
+import { TNewPlaceData } from "../../types/types";
 
 const NewPlace: FC = (): ReactElement => {
     const navigate = useNavigate();
-    const {isLoading, error, sendRequest, clearError} = useHttpClient();
-
     const {token} = useContext(AuthContext);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    const {mutate: createPlace, isPending, isError} = useMutation({
+        mutationFn: (placeData: TNewPlaceData) => createNewPlace(placeData, token),
+        onSuccess: () => {
+            navigate('/');
+        },
+        onError: (error: any) => {
+
+            setErrorMessage(error?.response?.data?.message || error?.message || "Something went wrong");
+        }
+    });
 
     const [formState, inputHandler] = useForm({
         title: {
@@ -36,7 +47,6 @@ const NewPlace: FC = (): ReactElement => {
         }
     }, false);
 
-
     const placeSubmitHandler = (event: FormEvent) => {
         event.preventDefault();
 
@@ -47,25 +57,19 @@ const NewPlace: FC = (): ReactElement => {
             image: formState.inputs.image.value
         };
 
-        sendRequest(`${import.meta.env.VITE_APP_BASE_BE_URL}/places`, 'POST', placeData, {Authorization: `Bearer ${token}`})
-            .then(() => {
-                navigate('/');
-            })
-            .catch(() => {
-                // Error handling is managed by useHttpClient, but additional actions can be performed here if needed
-            });
-    }
+        createPlace(placeData);
+    };
 
     return (
         <>
-            {error && <ErrorModal error={error} onClear={clearError}/>}
+            {isError && errorMessage && <ErrorModal error={errorMessage} onClear={() => setErrorMessage(null)}/>}
             <form className="list-none m-auto p-4 w-11/12 max-w-xl shadow-md rounded-md bg-white"
                   onSubmit={placeSubmitHandler}>
-                {isLoading && <LoadingSpinner asOverlay/>}
+                {isPending && <LoadingSpinner asOverlay/>}
                 <Input id="title" element="input" type="text" label="Title" validators={[VALIDATOR_REQUIRE()]}
                        errorText="Please enter a valid title."
                        onInput={inputHandler}/>
-                <Input id="description" element="textarea" type="text" label="Description"
+                <Input id="description" element="textarea" label="Description"
                        validators={[VALIDATOR_MINLENGTH(7)]}
                        errorText="Please enter a valid description. (at least 7 characters)"
                        onInput={inputHandler}/>
@@ -77,7 +81,7 @@ const NewPlace: FC = (): ReactElement => {
                 <Button type="submit" disabled={!formState.isValid}>ADD PLACE</Button>
             </form>
         </>
-    )
-}
+    );
+};
 
 export default NewPlace;
